@@ -1,7 +1,7 @@
 package com.houselibrary.model;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class Category {
@@ -14,10 +14,10 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy="category")
-    private Set<Book> books;
+    private List<Book> books;
 
     @OneToMany(mappedBy="parent")
-    private Set<Subcategory> subcategories;
+    private List<Subcategory> subcategories;
 
     public Category(String name) {
         this.name = name;
@@ -39,11 +39,11 @@ public class Category {
         this.name = name;
     }
 
-    public Set<Book> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public Set<Subcategory> getSubcategories() {
+    public List<Subcategory> getSubcategories() {
         return subcategories;
     }
 

@@ -1,7 +1,7 @@
 package com.houselibrary.model;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class Subcategory {
@@ -18,7 +18,7 @@ public class Subcategory {
     private Category parent;
 
     @OneToMany(mappedBy="subcategory")
-    private Set<Book> books;
+    private List<Book> books;
 
     public Subcategory(String name) {
         this.name = name;
@@ -48,7 +48,7 @@ public class Subcategory {
         this.parent = parent;
     }
 
-    public Set<Book> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
