@@ -1,9 +1,16 @@
 package com.houselibrary.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@SuperBuilder
+@NoArgsConstructor
 public class Category {
 
     @Id
@@ -18,10 +25,6 @@ public class Category {
 
     @OneToMany(mappedBy="parent")
     private List<Subcategory> subcategories;
-
-    public Category(String name) {
-        this.name = name;
-    }
 
     public int getId() {
         return id;

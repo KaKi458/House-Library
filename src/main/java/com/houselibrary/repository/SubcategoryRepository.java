@@ -1,16 +1,17 @@
 package com.houselibrary.repository;
 
 import com.houselibrary.model.Category;
+import com.houselibrary.model.Subcategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
+public interface SubcategoryRepository extends JpaRepository<Subcategory, Integer> {
 
     @Override
-    List<Category> findAll();
+    List<Subcategory> findAll();
 
-    Category findByName(String namePhrase);
+    Subcategory findByName(String name);
 }
