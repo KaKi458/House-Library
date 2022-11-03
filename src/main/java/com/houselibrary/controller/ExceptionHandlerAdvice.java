@@ -1,8 +1,7 @@
 package com.houselibrary.controller;
 
-import com.houselibrary.model.HouseLibraryException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
+import com.houselibrary.model.HouseLibraryException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice

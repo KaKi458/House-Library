@@ -1,8 +1,5 @@
 package com.houselibrary.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -24,11 +21,11 @@ public class Book {
 //    private Author author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="category_id", nullable=false)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="subcategory_id", nullable=false)
+    @JoinColumn(name = "subcategory_id", nullable = false)
     private Subcategory subcategory;
 
     public int getId() {

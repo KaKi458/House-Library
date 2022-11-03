@@ -1,5 +1,6 @@
 package com.houselibrary.controller;
 
+import com.houselibrary.mapper.ModelMapper;
 import com.houselibrary.model.Subcategory;
 import com.houselibrary.request.SubcategoryRequest;
 import com.houselibrary.response.SubcategoryResponse;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
@@ -16,27 +18,32 @@ import java.util.List;
 public class SubcategoryController {
 
     private final SubcategoryService subcategoryService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public SubcategoryController(SubcategoryService subcategoryService) {
+    public SubcategoryController(SubcategoryService subcategoryService, ModelMapper modelMapper) {
         this.subcategoryService = subcategoryService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping()
     public ResponseEntity<SubcategoryResponse> addSubcategory(@RequestBody SubcategoryRequest request) {
-        SubcategoryResponse response = subcategoryService.addSubcategory(request);
+        Subcategory subcategory = subcategoryService.addSubcategory(request);
+        SubcategoryResponse response = modelMapper.map(subcategory);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping()
     public ResponseEntity<List<SubcategoryResponse>> getAllSubcategories() {
-        List<SubcategoryResponse> response = subcategoryService.getAllSubcategories();
+        List<Subcategory> subcategories = subcategoryService.getAllSubcategories();
+        List<SubcategoryResponse> response = modelMapper.mapSubcategories(subcategories);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{subcategory_id}")
     public ResponseEntity<SubcategoryResponse> getSubcategory(@PathVariable int subcategory_id) {
-        SubcategoryResponse response = subcategoryService.getSubcategory(subcategory_id);
+        Subcategory subcategory = subcategoryService.getSubcategory(subcategory_id);
+        SubcategoryResponse response = modelMapper.map(subcategory);
         return ResponseEntity.ok().body(response);
     }
 

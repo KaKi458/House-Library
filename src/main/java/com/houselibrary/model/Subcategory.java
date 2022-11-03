@@ -3,7 +3,6 @@ package com.houselibrary.model;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,17 +12,17 @@ import java.util.List;
 public class Subcategory {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="category_id", nullable=false)
-    private Category parent;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
-    @OneToMany(mappedBy="subcategory")
+    @OneToMany(mappedBy = "subcategory")
     private List<Book> books;
 
     public int getId() {
@@ -42,12 +41,12 @@ public class Subcategory {
         this.name = name;
     }
 
-    public Category getParent() {
-        return parent;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setParent(Category parent) {
-        this.parent = parent;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public List<Book> getBooks() {
@@ -59,7 +58,7 @@ public class Subcategory {
         return "Subcategory{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", parent=" + parent +
+                ", category=" + category +
                 ", books=" + books +
                 '}';
     }

@@ -1,7 +1,5 @@
 package com.houselibrary.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -14,16 +12,16 @@ import java.util.List;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy="category")
+    @OneToMany(mappedBy = "category")
     private List<Book> books;
 
-    @OneToMany(mappedBy="parent")
+    @OneToMany(mappedBy = "category")
     private List<Subcategory> subcategories;
 
     public int getId() {
