@@ -1,9 +1,15 @@
 package com.houselibrary.model;
 
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@SuperBuilder
+@NoArgsConstructor
 public class Subcategory {
 
     @Id
@@ -13,16 +19,12 @@ public class Subcategory {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="category_id", nullable=false)
     private Category parent;
 
     @OneToMany(mappedBy="subcategory")
     private List<Book> books;
-
-    public Subcategory(String name) {
-        this.name = name;
-    }
 
     public int getId() {
         return id;
