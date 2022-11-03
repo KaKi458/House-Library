@@ -1,28 +1,24 @@
 package com.houselibrary.service;
 
 import com.houselibrary.model.Book;
-import com.houselibrary.model.Category;
-import com.houselibrary.model.Subcategory;
-import com.houselibrary.request.BookRequest;
-import com.houselibrary.response.BookResponse;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Service
 public interface BookService {
 
-    BookResponse addBook(@NotNull BookRequest request);
+    void addBook(@NotNull Book book);
 
-    void deleteBook(@NotNull int book_id);
+    void deleteBook(@NotNull int bookId);
 
-    BookResponse getBook(@NotNull int book_id);
+    Book getBook(@NotNull int bookId);
 
-    List<BookResponse> getAllBooks();
+    List<Book> getAllBooks();
 
     int countAllBooks();
 
-    List<BookResponse> findByTitle(@NotNull String titlePhrase);
-
-
+    List<Book> findByTitle(@NotNull String titlePhrase);
+    
 }
