@@ -1,5 +1,6 @@
 package com.houselibrary.service;
 
+import com.houselibrary.model.Book;
 import com.houselibrary.model.Subcategory;
 import com.houselibrary.request.SubcategoryRequest;
 
@@ -19,4 +20,7 @@ public interface SubcategoryService {
     int countAllSubcategories();
 
     Subcategory findByName(@NotNull String name);
+
+    List<Book> getBooks(@NotNull int subcategory_id);
+
 }

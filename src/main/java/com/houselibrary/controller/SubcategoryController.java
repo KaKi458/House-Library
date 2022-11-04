@@ -1,8 +1,10 @@
 package com.houselibrary.controller;
 
 import com.houselibrary.mapper.ModelMapper;
+import com.houselibrary.model.Book;
 import com.houselibrary.model.Subcategory;
 import com.houselibrary.request.SubcategoryRequest;
+import com.houselibrary.response.BookResponse;
 import com.houselibrary.response.SubcategoryResponse;
 import com.houselibrary.service.SubcategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +39,14 @@ public class SubcategoryController {
     public ResponseEntity<List<SubcategoryResponse>> getAllSubcategories() {
         List<Subcategory> subcategories = subcategoryService.getAllSubcategories();
         List<SubcategoryResponse> response = modelMapper.mapSubcategories(subcategories);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{subcategory_id}")
     public ResponseEntity<SubcategoryResponse> getSubcategory(@PathVariable int subcategory_id) {
         Subcategory subcategory = subcategoryService.getSubcategory(subcategory_id);
         SubcategoryResponse response = modelMapper.map(subcategory);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{subcategory_id}")
@@ -56,6 +58,13 @@ public class SubcategoryController {
     @GetMapping("/count")
     public ResponseEntity<Integer> countAllSubcategories() {
         int numberOfSubcategories = subcategoryService.countAllSubcategories();
-        return ResponseEntity.ok().body(numberOfSubcategories);
+        return ResponseEntity.ok(numberOfSubcategories);
+    }
+
+    @GetMapping("/{subcategory_id}/books")
+    public ResponseEntity<List<BookResponse>> getSubcategoryBooks(@PathVariable int subcategory_id) {
+        List<Book> books = subcategoryService.getBooks(subcategory_id);
+        List<BookResponse> response = modelMapper.mapBooks(books);
+        return ResponseEntity.ok(response);
     }
 }

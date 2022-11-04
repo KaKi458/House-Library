@@ -1,5 +1,6 @@
 package com.houselibrary.service;
 
+import com.houselibrary.model.Book;
 import com.houselibrary.model.HouseLibraryException;
 import com.houselibrary.model.Subcategory;
 import com.houselibrary.repository.SubcategoryRepository;
@@ -78,5 +79,11 @@ public class SubcategoryServiceImpl implements SubcategoryService {
                     HttpStatus.NOT_FOUND, "The subcategory with name: " + name + " does not exist.");
         }
         return subcategory;
+    }
+
+    @Override
+    public List<Book> getBooks(int subcategory_id) {
+        Subcategory subcategory = getSubcategory(subcategory_id);
+        return subcategory.getBooks();
     }
 }

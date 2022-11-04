@@ -1,7 +1,9 @@
 package com.houselibrary.service;
 
+import com.houselibrary.model.Book;
 import com.houselibrary.model.Category;
 import com.houselibrary.model.HouseLibraryException;
+import com.houselibrary.model.Subcategory;
 import com.houselibrary.repository.CategoryRepository;
 import com.houselibrary.request.CategoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,5 +71,17 @@ public class CategoryServiceImpl implements CategoryService {
                     HttpStatus.NOT_FOUND, "The category with name: " + name + " does not exist.");
         }
         return category;
+    }
+
+    @Override
+    public List<Book> getBooks(int category_id) {
+        Category category = getCategory(category_id);
+        return category.getBooks();
+    }
+
+    @Override
+    public List<Subcategory> getSubcategories(int category_id) {
+        Category category = getCategory(category_id);
+        return category.getSubcategories();
     }
 }

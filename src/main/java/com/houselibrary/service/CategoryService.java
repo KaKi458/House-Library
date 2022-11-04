@@ -1,6 +1,8 @@
 package com.houselibrary.service;
 
+import com.houselibrary.model.Book;
 import com.houselibrary.model.Category;
+import com.houselibrary.model.Subcategory;
 import com.houselibrary.request.CategoryRequest;
 
 import javax.validation.constraints.NotNull;
@@ -19,4 +21,8 @@ public interface CategoryService {
     int countAllCategories();
 
     Category findByName(@NotNull String name);
+
+    List<Book> getBooks(int category_id);
+
+    List<Subcategory> getSubcategories(int category_id);
 }

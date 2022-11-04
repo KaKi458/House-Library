@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class HouseLibraryException extends RuntimeException {
 
-    private HttpStatus httpStatus;
+    private final HttpStatus httpStatus;
 
     public HouseLibraryException(HttpStatus httpStatus, String message) {
         super(message);

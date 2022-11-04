@@ -1,9 +1,13 @@
 package com.houselibrary.controller;
 
 import com.houselibrary.mapper.ModelMapper;
+import com.houselibrary.model.Book;
 import com.houselibrary.model.Category;
+import com.houselibrary.model.Subcategory;
 import com.houselibrary.request.CategoryRequest;
+import com.houselibrary.response.BookResponse;
 import com.houselibrary.response.CategoryResponse;
+import com.houselibrary.response.SubcategoryResponse;
 import com.houselibrary.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,5 +61,19 @@ public class CategoryController {
     public ResponseEntity<Integer> countAllCategories() {
         int numberOfCategories = categoryService.countAllCategories();
         return ResponseEntity.ok().body(numberOfCategories);
+    }
+
+    @GetMapping("/{category_id}/books")
+    public ResponseEntity<List<BookResponse>> getCategoryBooks(@PathVariable int category_id) {
+        List<Book> books = categoryService.getBooks(category_id);
+        List<BookResponse> response = modelMapper.mapBooks(books);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{category_id}/subcategories")
+    public ResponseEntity<List<SubcategoryResponse>> getCategorySubcategories(@PathVariable int category_id) {
+        List<Subcategory> subcategories = categoryService.getSubcategories(category_id);
+        List<SubcategoryResponse> response = modelMapper.mapSubcategories(subcategories);
+        return ResponseEntity.ok(response);
     }
 }
