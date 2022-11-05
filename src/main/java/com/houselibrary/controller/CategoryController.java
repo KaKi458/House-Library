@@ -32,34 +32,34 @@ public class CategoryController {
 
     @PostMapping()
     public ResponseEntity<CategoryResponse> addCategory(@RequestBody CategoryRequest request) {
-        Category category = categoryService.addCategory(request);
+        Category category = categoryService.add(request);
         CategoryResponse response = modelMapper.map(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping()
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
+        List<Category> categories = categoryService.getAll();
         List<CategoryResponse> response = modelMapper.mapCategories(categories);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{category_id}")
     public ResponseEntity<CategoryResponse> getCategory(@PathVariable int category_id) {
-        Category category = categoryService.getCategory(category_id);
+        Category category = categoryService.get(category_id);
         CategoryResponse response = modelMapper.map(category);
         return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{category_id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable int category_id) {
-        categoryService.deleteCategory(category_id);
+        categoryService.delete(category_id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/count")
     public ResponseEntity<Integer> countAllCategories() {
-        int numberOfCategories = categoryService.countAllCategories();
+        int numberOfCategories = categoryService.countAll();
         return ResponseEntity.ok().body(numberOfCategories);
     }
 

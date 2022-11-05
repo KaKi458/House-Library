@@ -28,34 +28,34 @@ public class BookController {
 
     @PostMapping()
     public ResponseEntity<BookResponse> addBook(@RequestBody BookRequest request) {
-        Book book = bookService.addBook(request);
+        Book book = bookService.add(request);
         BookResponse response = modelMapper.map(book);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping()
     public ResponseEntity<List<BookResponse>> getAllBooks() {
-        List<Book> books = bookService.getAllBooks();
+        List<Book> books = bookService.getAll();
         List<BookResponse> response = modelMapper.mapBooks(books);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{book_id}")
     public ResponseEntity<BookResponse> getBook(@PathVariable int book_id) {
-        Book book = bookService.getBook(book_id);
+        Book book = bookService.get(book_id);
         BookResponse response = modelMapper.map(book);
         return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{book_id}")
     public ResponseEntity<Void> deleteBook(@PathVariable int book_id) {
-        bookService.deleteBook(book_id);
+        bookService.delete(book_id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/count")
     public ResponseEntity<Integer> countAllBooks() {
-        int numberOfBooks = bookService.countAllBooks();
+        int numberOfBooks = bookService.countAll();
         return ResponseEntity.ok().body(numberOfBooks);
     }
 }

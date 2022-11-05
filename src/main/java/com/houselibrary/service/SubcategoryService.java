@@ -7,20 +7,7 @@ import com.houselibrary.request.SubcategoryRequest;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public interface SubcategoryService {
-
-    Subcategory addSubcategory(@NotNull SubcategoryRequest request);
-
-    void deleteSubcategory(@NotNull int category_id);
-
-    Subcategory getSubcategory(@NotNull int category_id);
-
-    List<Subcategory> getAllSubcategories();
-
-    int countAllSubcategories();
-
-    Subcategory findByName(@NotNull String name);
+public interface SubcategoryService extends Service<Subcategory> {
 
     List<Book> getBooks(@NotNull int subcategory_id);
-
 }

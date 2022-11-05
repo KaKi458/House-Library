@@ -3,7 +3,10 @@ package com.houselibrary.service;
 import com.houselibrary.model.Book;
 import com.houselibrary.model.HouseLibraryException;
 import com.houselibrary.model.Subcategory;
+import com.houselibrary.repository.BookRepository;
+import com.houselibrary.repository.CategoryRepository;
 import com.houselibrary.repository.SubcategoryRepository;
+import com.houselibrary.request.Request;
 import com.houselibrary.request.SubcategoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,14 +16,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SubcategoryServiceImpl implements SubcategoryService {
+public class SubcategoryServiceImpl extends ServiceImpl<Subcategory> implements SubcategoryService {
 
-    private final SubcategoryRepository subcategoryRepository;
     private CategoryService categoryService;
 
     @Autowired
     public SubcategoryServiceImpl(SubcategoryRepository subcategoryRepository) {
-        this.subcategoryRepository = subcategoryRepository;
+        this.repository = subcategoryRepository;
     }
 
     @Autowired
@@ -29,61 +31,34 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     }
 
     @Override
-    public Subcategory addSubcategory(SubcategoryRequest request) {
+    public Subcategory add(Request<Subcategory> request) {
+        SubcategoryRequest subcategoryRequest = (SubcategoryRequest) request;
         Subcategory subcategory = Subcategory.builder()
-                .name(request.name())
-                .category(categoryService.findByName(request.categoryName()))
+                .name(subcategoryRequest.getName())
+                .category(categoryService.findByName(subcategoryRequest.getCategoryName()))
                 .build();
-        subcategoryRepository.save(subcategory);
+        repository.save(subcategory);
         return subcategory;
-    }
-
-    @Override
-    public void deleteSubcategory(int subcategory_id) {
-        if (subcategoryRepository.existsById(subcategory_id)) subcategoryRepository.deleteById(subcategory_id);
-        else throw new HouseLibraryException(
-                HttpStatus.NOT_FOUND, "The subcategory with id: " + subcategory_id + " does not exist.");
-    }
-
-    @Override
-    public Subcategory getSubcategory(int subcategory_id) {
-        Subcategory subcategory;
-        Optional<Subcategory> optional = subcategoryRepository.findById(subcategory_id);
-        if (optional.isPresent()) {
-            subcategory = optional.get();
-        } else {
-            throw new HouseLibraryException(
-                    HttpStatus.NOT_FOUND, "The subcategory with id: " + subcategory_id + " does not exist.");
-        }
-        return subcategory;
-    }
-
-    @Override
-    public List<Subcategory> getAllSubcategories() {
-        return subcategoryRepository.findAll();
-    }
-
-    @Override
-    public int countAllSubcategories() {
-        return (int) subcategoryRepository.count();
     }
 
     @Override
     public Subcategory findByName(String name) {
+        SubcategoryRepository subcategoryRepository = (SubcategoryRepository) repository;
         Subcategory subcategory;
         Optional<Subcategory> optional = subcategoryRepository.findByName(name);
         if (optional.isPresent()) {
             subcategory = optional.get();
         } else {
             throw new HouseLibraryException(
-                    HttpStatus.NOT_FOUND, "The subcategory with name: " + name + " does not exist.");
+                    HttpStatus.NOT_FOUND, "The category with name: " + name + " does not exist.");
         }
         return subcategory;
+
     }
 
     @Override
     public List<Book> getBooks(int subcategory_id) {
-        Subcategory subcategory = getSubcategory(subcategory_id);
+        Subcategory subcategory = get(subcategory_id);
         return subcategory.getBooks();
     }
 }

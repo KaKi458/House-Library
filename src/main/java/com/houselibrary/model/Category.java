@@ -1,18 +1,17 @@
 package com.houselibrary.model;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@SuperBuilder
 @NoArgsConstructor
-public class Category {
+public class Category extends Model {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
@@ -23,6 +22,11 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Subcategory> subcategories;
+
+    @Builder
+    public Category(String name) {
+        this.name = name;
+    }
 
     public int getId() {
         return id;

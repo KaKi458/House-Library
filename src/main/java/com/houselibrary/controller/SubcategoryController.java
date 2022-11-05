@@ -30,34 +30,34 @@ public class SubcategoryController {
 
     @PostMapping()
     public ResponseEntity<SubcategoryResponse> addSubcategory(@RequestBody SubcategoryRequest request) {
-        Subcategory subcategory = subcategoryService.addSubcategory(request);
+        Subcategory subcategory = subcategoryService.add(request);
         SubcategoryResponse response = modelMapper.map(subcategory);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping()
     public ResponseEntity<List<SubcategoryResponse>> getAllSubcategories() {
-        List<Subcategory> subcategories = subcategoryService.getAllSubcategories();
+        List<Subcategory> subcategories = subcategoryService.getAll();
         List<SubcategoryResponse> response = modelMapper.mapSubcategories(subcategories);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{subcategory_id}")
     public ResponseEntity<SubcategoryResponse> getSubcategory(@PathVariable int subcategory_id) {
-        Subcategory subcategory = subcategoryService.getSubcategory(subcategory_id);
+        Subcategory subcategory = subcategoryService.get(subcategory_id);
         SubcategoryResponse response = modelMapper.map(subcategory);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{subcategory_id}")
     public ResponseEntity<Void> deleteSubcategory(@PathVariable int subcategory_id) {
-        subcategoryService.deleteSubcategory(subcategory_id);
+        subcategoryService.delete(subcategory_id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/count")
     public ResponseEntity<Integer> countAllSubcategories() {
-        int numberOfSubcategories = subcategoryService.countAllSubcategories();
+        int numberOfSubcategories = subcategoryService.countAll();
         return ResponseEntity.ok(numberOfSubcategories);
     }
 

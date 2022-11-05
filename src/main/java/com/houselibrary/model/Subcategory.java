@@ -1,5 +1,6 @@
 package com.houselibrary.model;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -7,12 +8,11 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@SuperBuilder
 @NoArgsConstructor
-public class Subcategory {
+public class Subcategory extends Model {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
@@ -24,6 +24,12 @@ public class Subcategory {
 
     @OneToMany(mappedBy = "subcategory")
     private List<Book> books;
+
+    @Builder
+    public Subcategory(String name, Category category) {
+        this.name = name;
+        this.category = category;
+    }
 
     public int getId() {
         return id;
@@ -63,3 +69,8 @@ public class Subcategory {
                 '}';
     }
 }
+
+
+
+
+

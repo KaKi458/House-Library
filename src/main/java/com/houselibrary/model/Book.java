@@ -1,17 +1,16 @@
 package com.houselibrary.model;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @Entity
-@SuperBuilder
 @NoArgsConstructor
-public class Book {
+public class Book extends Model {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
@@ -27,6 +26,13 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subcategory_id", nullable = false)
     private Subcategory subcategory;
+
+    @Builder
+    public Book(String title, Category category, Subcategory subcategory) {
+        this.title = title;
+        this.category = category;
+        this.subcategory = subcategory;
+    }
 
     public int getId() {
         return id;

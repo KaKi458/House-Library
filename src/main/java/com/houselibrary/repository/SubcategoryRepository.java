@@ -2,16 +2,12 @@ package com.houselibrary.repository;
 
 import com.houselibrary.model.Subcategory;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
-@Repository
-public interface SubcategoryRepository extends JpaRepository<Subcategory, Integer> {
-
-    @Override
-    List<Subcategory> findAll();
+@Transactional
+public interface SubcategoryRepository extends Repository<Subcategory> {
 
     Optional<Subcategory> findByName(String name);
 }
