@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import javax.persistence.Column;
 
 @SpringBootApplication
-@ComponentScan("com.houselibrary")
+@ComponentScan({"com.houselibrary.api", "com.houselibrary.core"})
 public class HouseLibraryApplication {
 
     public static void main(String[] args) {
