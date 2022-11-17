@@ -1,13 +1,14 @@
 package com.houselibrary.core.model;
 
 import com.houselibrary.core.template.Model;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@Getter
+@Setter
 public class Book extends Model {
 
     @Id
@@ -17,8 +18,8 @@ public class Book extends Model {
     @Column(nullable = false)
     private String title;
 
-//    @Column
-//    private Author author;
+    @ManyToMany(mappedBy = "books")
+    private List<Author> authors;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -28,42 +29,21 @@ public class Book extends Model {
     @JoinColumn(name = "subcategory_id", nullable = false)
     private Subcategory subcategory;
 
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
+
     @Builder
-    public Book(String title, Category category, Subcategory subcategory) {
+    public Book(
+            String title,
+            Category category,
+            Subcategory subcategory,
+            Priority priority,
+            List<Author> authors) {
         this.title = title;
         this.category = category;
         this.subcategory = subcategory;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Subcategory getSubcategory() {
-        return subcategory;
-    }
-
-    public void setSubcategory(Subcategory subcategory) {
-        this.subcategory = subcategory;
+        this.priority = priority;
+        this.authors = authors;
     }
 }
+

@@ -64,7 +64,7 @@ public class SubcategoryController implements SubcategoryApi {
     @Override
     public ResponseEntity<List<BookResponse>> getSubcategoryBooks(@PathVariable int subcategory_id) {
         List<Book> books = subcategoryService.getBooks(subcategory_id);
-        List<BookResponse> response = modelMapper.mapBooks(books);
+        List<BookResponse> response = modelMapper.mapBooksWithAuthors(books);
         return ResponseEntity.ok(response);
     }
 }

@@ -66,7 +66,7 @@ public class CategoryController implements CategoryApi {
     @Override
     public ResponseEntity<List<BookResponse>> getCategoryBooks(@PathVariable int category_id) {
         List<Book> books = categoryService.getBooks(category_id);
-        List<BookResponse> response = modelMapper.mapBooks(books);
+        List<BookResponse> response = modelMapper.mapBooksWithAuthors(books);
         return ResponseEntity.ok(response);
     }
 

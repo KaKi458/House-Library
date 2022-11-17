@@ -1,5 +1,8 @@
 package com.houselibrary.core.mapper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.houselibrary.api.model.response.AuthorResponse;
+import com.houselibrary.core.model.Author;
 import com.houselibrary.core.model.Book;
 import com.houselibrary.core.model.Category;
 import com.houselibrary.core.model.Subcategory;
@@ -24,7 +27,16 @@ public interface ModelMapper {
                 .categoryName(book.getCategory().getName())
                 .subcategoryId(book.getSubcategory().getId())
                 .subcategoryName(book.getSubcategory().getName())
+                .priority(book.getPriority())
                 .build();
+    }
+
+    default BookResponse mapWithAuthors(Book book) {
+        if(book == null)
+            return null;
+        BookResponse response = map(book);
+        response.setAuthors(mapAuthors(book.getAuthors()));
+        return response;
     }
 
     default CategoryResponse map(Category category) {
@@ -50,12 +62,40 @@ public interface ModelMapper {
                 .build();
     }
 
+    default AuthorResponse map(Author author) {
+        if (author == null)
+            return null;
+        return AuthorResponse.builder()
+                .id(author.getId())
+                .firstName(author.getFirstName())
+                .lastName(author.getLastName())
+                .build();
+    }
+
+    default AuthorResponse mapWithBooks(Author author) {
+        if(author == null)
+            return null;
+        AuthorResponse response = map(author);
+        response.setBooks(mapBooks(author.getBooks()));
+        return response;
+    }
+
+
     default List<BookResponse> mapBooks(List<Book> books) {
         if (books == null)
             return null;
         List<BookResponse> response = new ArrayList<>(books.size());
         for (Book book : books)
             response.add(map(book));
+        return response;
+    }
+
+    default List<BookResponse> mapBooksWithAuthors(List<Book> books) {
+        if (books == null)
+            return null;
+        List<BookResponse> response = new ArrayList<>(books.size());
+        for (Book book : books)
+            response.add(mapWithAuthors(book));
         return response;
     }
 
@@ -74,6 +114,15 @@ public interface ModelMapper {
         List<SubcategoryResponse> response = new ArrayList<>(subcategories.size());
         for (Subcategory subcategory : subcategories)
             response.add(map(subcategory));
+        return response;
+    }
+
+    default List<AuthorResponse> mapAuthors(List<Author> authors) {
+        if (authors == null)
+            return null;
+        List<AuthorResponse> response = new ArrayList<>(authors.size());
+        for (Author author : authors)
+            response.add(map(author));
         return response;
     }
 }

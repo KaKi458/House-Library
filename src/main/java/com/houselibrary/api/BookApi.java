@@ -1,9 +1,11 @@
 package com.houselibrary.api;
 
 import com.houselibrary.api.model.request.BookRequest;
+import com.houselibrary.api.model.request.PriorityChangeRequest;
 import com.houselibrary.api.model.response.BookResponse;
 import com.houselibrary.core.mapper.ModelMapper;
 import com.houselibrary.core.model.Book;
+import com.houselibrary.core.model.Priority;
 import com.houselibrary.core.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,4 +31,7 @@ public interface BookApi {
 
     @GetMapping("/count")
     ResponseEntity<Integer> countAllBooks();
+
+    @PatchMapping("/{book_id}/priority")
+    ResponseEntity<BookResponse> changeBookPriority(@PathVariable int book_id, @RequestBody PriorityChangeRequest request);
 }
