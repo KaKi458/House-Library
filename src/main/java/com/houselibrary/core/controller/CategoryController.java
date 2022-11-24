@@ -9,6 +9,7 @@ import com.houselibrary.api.model.request.CategoryRequest;
 import com.houselibrary.api.model.response.BookResponse;
 import com.houselibrary.api.model.response.CategoryResponse;
 import com.houselibrary.api.model.response.SubcategoryResponse;
+import com.houselibrary.core.service.BookService;
 import com.houselibrary.core.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,13 +22,25 @@ import java.util.List;
 @Controller
 public class CategoryController implements CategoryApi {
 
-    private final CategoryService categoryService;
+    private CategoryService categoryService;
+
+    private BookService bookService;
+
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CategoryController(CategoryService categoryService, ModelMapper modelMapper) {
-        this.categoryService = categoryService;
+    public CategoryController(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @Autowired
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @Override
@@ -53,6 +66,8 @@ public class CategoryController implements CategoryApi {
 
     @Override
     public ResponseEntity<Void> deleteCategory(@PathVariable int category_id) {
+        List<Book> books = categoryService.getBooks(category_id);
+        books.forEach(book -> bookService.delete(book.getId()));
         categoryService.delete(category_id);
         return ResponseEntity.noContent().build();
     }

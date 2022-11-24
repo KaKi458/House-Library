@@ -25,7 +25,9 @@ public class Author extends Model {
     @Column(nullable = false)
     private String lastName;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "author_book",
             joinColumns = @JoinColumn(name = "author_id"),
@@ -36,5 +38,13 @@ public class Author extends Model {
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public void addBook(Book book) {
+        books.add(book);
+    }
+
+    public void removeBook(Book book) {
+        books.remove(book);
     }
 }

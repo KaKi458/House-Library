@@ -19,13 +19,17 @@ import java.util.List;
 @Controller
 public class BookController implements BookApi {
 
-    private final BookService bookService;
+    private BookService bookService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public BookController(BookService bookService, ModelMapper modelMapper) {
-        this.bookService = bookService;
+    public BookController(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @Override

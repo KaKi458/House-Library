@@ -7,6 +7,8 @@ public interface Service<T extends Model> {
 
     T add(@NotNull Request<T> request);
 
+    T update(@NotNull int id, @NotNull Request<T> request);
+
     void delete(@NotNull int id);
 
     T get(@NotNull int id);

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,15 +23,21 @@ public class Category extends Model {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    private List<Book> books;
-
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private List<Subcategory> subcategories;
 
     @Builder
     public Category(String name) {
         this.name = name;
+    }
+
+    public List<Book> getBooks() {
+        List<Book> books = new ArrayList<>();
+        if(subcategories == null)
+            return null;
+        subcategories.forEach(subcategory ->
+                books.addAll(subcategory.getBooks()));
+        return books;
     }
 
 }

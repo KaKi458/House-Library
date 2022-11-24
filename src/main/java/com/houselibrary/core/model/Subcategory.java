@@ -26,7 +26,7 @@ public class Subcategory extends Model {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "subcategory")
+    @OneToMany(mappedBy = "subcategory", cascade = CascadeType.REMOVE)
     private List<Book> books;
 
     @Builder

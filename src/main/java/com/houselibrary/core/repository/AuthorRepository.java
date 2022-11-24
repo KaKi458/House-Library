@@ -21,7 +21,7 @@ public interface AuthorRepository extends Repository<Author> {
     default Optional<Author> findByName(String firstName, String lastName) {
         return findByLastName(lastName)
                 .stream()
-                .filter(author -> Objects.equals(author.getLastName(), lastName))
+                .filter(author -> Objects.equals(author.getFirstName(), firstName))
                 .findAny();
     }
 }

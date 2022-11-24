@@ -1,6 +1,5 @@
 package com.houselibrary.core.mapper;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.houselibrary.api.model.response.AuthorResponse;
 import com.houselibrary.core.model.Author;
 import com.houselibrary.core.model.Book;
@@ -10,7 +9,6 @@ import com.houselibrary.api.model.response.BookResponse;
 import com.houselibrary.api.model.response.CategoryResponse;
 import com.houselibrary.api.model.response.SubcategoryResponse;
 import org.mapstruct.Mapper;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +21,8 @@ public interface ModelMapper {
         return BookResponse.builder()
                 .id(book.getId())
                 .title(book.getTitle())
-                .categoryId(book.getCategory().getId())
-                .categoryName(book.getCategory().getName())
+                .categoryId(book.getSubcategory().getCategory().getId())
+                .categoryName(book.getSubcategory().getCategory().getName())
                 .subcategoryId(book.getSubcategory().getId())
                 .subcategoryName(book.getSubcategory().getName())
                 .priority(book.getPriority())

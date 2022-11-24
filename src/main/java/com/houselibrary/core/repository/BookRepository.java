@@ -14,10 +14,6 @@ public interface BookRepository extends Repository<Book> {
 
     List<Book> findByTitle(String title);
 
-    long countByCategory(Category category);
-
-    long countBySubcategory(Subcategory subcategory);
-
     @Override
     default Optional<Book> findByName(String name) {
         return findByTitle(name).stream().findFirst();

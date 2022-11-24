@@ -6,6 +6,7 @@ import com.houselibrary.core.model.Book;
 import com.houselibrary.core.model.HouseLibraryException;
 import com.houselibrary.core.repository.AuthorRepository;
 import com.houselibrary.core.service.AuthorService;
+import com.houselibrary.core.service.BookService;
 import com.houselibrary.core.template.Request;
 import com.houselibrary.core.template.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +27,17 @@ public class AuthorServiceImpl extends ServiceImpl<Author> implements AuthorServ
     }
 
     @Override
-    public Author add(Request<Author> request) {
-
-        AuthorRequest authorRequest = (AuthorRequest) request;
-        Author author = Author.builder()
-                .firstName(authorRequest.getFirstName())
-                .lastName(authorRequest.getLastName())
-                .build();
-
-        repository.save(author);
-        return author;
-    }
-
-
-    @Override
     public List<Book> getBooks(int author_id) {
-
         Author author = get(author_id);
         return author.getBooks();
+    }
+
+    @Override
+    public Book addBook(int author_id, Book book) {
+        Author author = get(author_id);
+        author.addBook(book);
+        repository.save(author);
+        return book;
     }
 
     @Override
@@ -66,5 +60,32 @@ public class AuthorServiceImpl extends ServiceImpl<Author> implements AuthorServ
         requests.forEach(
                 authorRequest -> authors.add(findByName(authorRequest)));
         return authors;
+    }
+
+    @Override
+    protected Author create(Request<Author> request) {
+        AuthorRequest authorRequest = (AuthorRequest) request;
+        return Author.builder()
+                .firstName(authorRequest.getFirstName())
+                .lastName(authorRequest.getLastName())
+                .build();
+    }
+
+    @Override
+    protected Author update(Request<Author> request) {
+        return null;
+    }
+
+    @Override
+    protected String getClassName() {
+        return "author";
+    }
+
+    @Override
+    protected void clean(Author author) {
+        List<Book> books = author.getBooks();
+        for(Book book : books) {
+            book.removeAuthor(author);
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.houselibrary.core.model.Subcategory;
 import com.houselibrary.api.model.request.SubcategoryRequest;
 import com.houselibrary.api.model.response.BookResponse;
 import com.houselibrary.api.model.response.SubcategoryResponse;
+import com.houselibrary.core.service.CategoryService;
 import com.houselibrary.core.service.SubcategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +20,17 @@ import java.util.List;
 @Controller
 public class SubcategoryController implements SubcategoryApi {
 
-    private final SubcategoryService subcategoryService;
+    private SubcategoryService subcategoryService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public SubcategoryController(SubcategoryService subcategoryService, ModelMapper modelMapper) {
-        this.subcategoryService = subcategoryService;
+    public SubcategoryController(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setSubcategoryService(SubcategoryService subcategoryService) {
+        this.subcategoryService = subcategoryService;
     }
 
     @Override
