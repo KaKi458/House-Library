@@ -36,4 +36,4 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/java/com/houselibrary/core/service/BookServiceImpl.java
+/src/main/java/com/houselibrary/service/BookServiceImpl.java
