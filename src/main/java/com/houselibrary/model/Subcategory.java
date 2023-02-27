@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.List;
 
 @Entity
@@ -19,8 +20,7 @@ public class Subcategory {
   @Column(nullable = false)
   private String name;
 
-  @ManyToOne
-  private Category category;
+  @ManyToOne private Category category;
 
   @OneToMany(mappedBy = "subcategory")
   private List<Book> books;
@@ -28,11 +28,5 @@ public class Subcategory {
   public Subcategory(String name, Category category) {
     this.name = name;
     this.category = category;
-  }
-
-  public List<Book> getBooksByPriority(Priority priority) {
-    return books.stream()
-            .filter(book -> book.getPriority() == priority)
-            .toList();
   }
 }

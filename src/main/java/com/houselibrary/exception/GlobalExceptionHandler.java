@@ -19,8 +19,8 @@ public class GlobalExceptionHandler {
   public ResponseEntity<?> handleException(HouseLibraryException e) {
     log.error("Session API exception raised: {}", e.getMessage());
     return ResponseEntity.status(e.getHttpStatus())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(getJson(e.getMessage()));
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(getJson(e.getMessage()));
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -29,8 +29,8 @@ public class GlobalExceptionHandler {
     FieldError fieldError = e.getBindingResult().getFieldError();
     String field = fieldError != null ? fieldError.getField() : "<unknown>";
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(getJson("Validation failed for parameter '" + field + "'"));
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(getJson("Validation failed for parameter '" + field + "'"));
   }
 
   @ExceptionHandler(ValueInstantiationException.class)
@@ -38,8 +38,8 @@ public class GlobalExceptionHandler {
     log.error("ValueInstantiationException raised: {}", e.getMessage());
     String field = e.getPath().get(0).getFieldName();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(getJson("Validation failed for parameter '" + field + "'"));
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(getJson("Validation failed for parameter '" + field + "'"));
   }
 
   private String getJson(String message) {
