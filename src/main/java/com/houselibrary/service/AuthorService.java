@@ -3,8 +3,7 @@ package com.houselibrary.service;
 import com.houselibrary.dto.request.AuthorRequest;
 import com.houselibrary.model.Author;
 import com.houselibrary.model.Book;
-
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public interface AuthorService {

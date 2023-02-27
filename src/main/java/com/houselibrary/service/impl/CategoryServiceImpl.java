@@ -10,7 +10,6 @@ import com.houselibrary.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public void deleteCategory(Long categoryId) {
     Category category = getCategory(categoryId);
+    removeAllBooksFromCategory(category);
     categoryRepository.delete(category);
   }
 
@@ -66,5 +66,11 @@ public class CategoryServiceImpl implements CategoryService {
   public List<Subcategory> getCategorySubcategories(Long categoryId) {
     Category category = getCategory(categoryId);
     return category.getSubcategories();
+  }
+
+  private void removeAllBooksFromCategory(Category category) {
+    for (Book book : category.getBooks()) {
+      book.setSubcategory(null);
+    }
   }
 }

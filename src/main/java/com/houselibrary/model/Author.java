@@ -1,10 +1,9 @@
 package com.houselibrary.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +37,10 @@ public class Author {
   }
 
   public void addBook(Book book) {
-    this.books.add(book);
+    books.add(book);
+  }
+
+  public void removeBook(Book book) {
+    books.remove(book);
   }
 }

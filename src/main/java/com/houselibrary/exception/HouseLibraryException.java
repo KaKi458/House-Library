@@ -14,4 +14,5 @@ public class HouseLibraryException extends RuntimeException {
   public HttpStatus getHttpStatus() {
     return httpStatus;
   }
+
 }

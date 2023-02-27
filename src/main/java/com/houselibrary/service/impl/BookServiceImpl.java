@@ -28,15 +28,12 @@ public class BookServiceImpl implements BookService {
   @Override
   public Book addBook(BookRequest bookRequest) {
     Subcategory subcategory = subcategoryService.getSubcategory(bookRequest.getSubcategoryId());
-    Book book = Book.builder().title(bookRequest.getTitle()).subcategory(subcategory).build();
-
-    List<Author> authors = new ArrayList<>();
-    for (Long authorId : bookRequest.getAuthors()) {
-      Author author = authorService.getAuthor(authorId);
-      author.addBook(book);
-      authors.add(author);
-    }
-    book.setAuthors(authors);
+    Book book = Book.builder()
+                    .title(bookRequest.getTitle())
+                    .subcategory(subcategory)
+                    .build();
+    List<Author> authors = getAuthorsFromRequest(bookRequest);
+    addAuthors(book, authors);
     bookRepository.save(book);
     return book;
   }
@@ -54,17 +51,11 @@ public class BookServiceImpl implements BookService {
   public Book updateBook(Long bookId, BookRequest bookRequest) {
     Book book = getBook(bookId);
     Subcategory subcategory = subcategoryService.getSubcategory(bookRequest.getSubcategoryId());
-    List<Author> authors = new ArrayList<>();
-    for (Long authorId : bookRequest.getAuthors()) {
-      Author author = authorService.getAuthor(authorId);
-      if (!author.getBooks().contains(book)) {
-        author.addBook(book);
-      }
-      authors.add(author);
-    }
-    book.setTitle(bookRequest.getTitle());
     book.setSubcategory(subcategory);
-    book.setAuthors(authors);
+    removeAuthors(book);
+    List<Author> authors = getAuthorsFromRequest(bookRequest);
+    addAuthors(book, authors);
+    book.setTitle(bookRequest.getTitle());
     bookRepository.save(book);
     return book;
   }
@@ -83,5 +74,27 @@ public class BookServiceImpl implements BookService {
   @Override
   public List<Book> getAllBooks() {
     return bookRepository.findAll();
+  }
+
+  private List<Author> getAuthorsFromRequest(BookRequest bookRequest) {
+    List<Author> authors = new ArrayList<>();
+    for (Long authorId : bookRequest.getAuthors()) {
+      Author author = authorService.getAuthor(authorId);
+      authors.add(author);
+    }
+    return authors;
+  }
+
+  private void addAuthors(Book book, List<Author> authors) {
+    for (Author author : authors) {
+      author.addBook(book);
+    }
+    book.setAuthors(authors);
+  }
+
+  private void removeAuthors(Book book) {
+    for (Author author : book.getAuthors()) {
+      author.removeBook(book);
+    }
   }
 }

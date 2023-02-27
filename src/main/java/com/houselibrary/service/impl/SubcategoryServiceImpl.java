@@ -11,7 +11,6 @@ import com.houselibrary.service.SubcategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +52,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
   @Override
   public void deleteSubcategory(Long subcategoryId) {
     Subcategory subcategory = getSubcategory(subcategoryId);
+    removeAllBooksFromSubcategory(subcategory);
     subcategoryRepository.delete(subcategory);
   }
 
@@ -65,5 +65,11 @@ public class SubcategoryServiceImpl implements SubcategoryService {
   public List<Book> getSubcategoryBooks(Long subcategoryId) {
     Subcategory subcategory = getSubcategory(subcategoryId);
     return subcategory.getBooks();
+  }
+
+  private void removeAllBooksFromSubcategory(Subcategory subcategory) {
+    for (Book book : subcategory.getBooks()) {
+      book.setSubcategory(null);
+    }
   }
 }
