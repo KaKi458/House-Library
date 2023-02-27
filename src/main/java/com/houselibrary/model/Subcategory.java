@@ -19,7 +19,7 @@ public class Subcategory {
   @Column(nullable = false)
   private String name;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   private Category category;
 
   @OneToMany(mappedBy = "subcategory")
@@ -28,5 +28,11 @@ public class Subcategory {
   public Subcategory(String name, Category category) {
     this.name = name;
     this.category = category;
+  }
+
+  public List<Book> getBooksByPriority(Priority priority) {
+    return books.stream()
+            .filter(book -> book.getPriority() == priority)
+            .toList();
   }
 }
