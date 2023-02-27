@@ -9,22 +9,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Slf4j
-public class ExceptionHandler {
+public class GlobalExceptionHandler {
 
-  @org.springframework.web.bind.annotation.ExceptionHandler(HouseLibraryException.class)
+  @ExceptionHandler(HouseLibraryException.class)
   public ResponseEntity<?> handleException(HouseLibraryException e) {
-    log.error("Session API exception raised: ", e);
+    log.error("Session API exception raised: {}", e.getMessage());
     return ResponseEntity.status(e.getHttpStatus())
             .contentType(MediaType.APPLICATION_JSON)
             .body(getJson(e.getMessage()));
   }
 
-  @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
+  @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<?> handleException(MethodArgumentNotValidException e) {
-    log.error("MethodArgumentNotValidException raised: ", e);
+    log.error("MethodArgumentNotValidException raised: {}", e.getMessage());
     FieldError fieldError = e.getBindingResult().getFieldError();
     String field = fieldError != null ? fieldError.getField() : "<unknown>";
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -32,9 +33,9 @@ public class ExceptionHandler {
             .body(getJson("Validation failed for parameter '" + field + "'"));
   }
 
-  @org.springframework.web.bind.annotation.ExceptionHandler(ValueInstantiationException.class)
+  @ExceptionHandler(ValueInstantiationException.class)
   public ResponseEntity<?> handleException(ValueInstantiationException e) {
-    log.error("ValueInstantiationException raised: ", e);
+    log.error("ValueInstantiationException raised: {}", e.getMessage());
     String field = e.getPath().get(0).getFieldName();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)

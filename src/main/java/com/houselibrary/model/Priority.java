@@ -3,13 +3,24 @@ package com.houselibrary.model;
 import java.util.Objects;
 
 public enum Priority {
-  HIGH,
-  MEDIUM,
-  LOW;
 
-  public static Priority fromValue(String value) {
+  ZERO(0),
+  LOW(1),
+  MEDIUM(2),
+  HIGH(3);
+
+  private final int value;
+  Priority(int value) {
+    this.value = value;
+  }
+
+  public int getValue() {
+    return value;
+  }
+
+  public static Priority fromValue(int value) {
     for (Priority priority : Priority.values()) {
-      if (Objects.equals(value, priority.toString())) {
+      if (value == priority.getValue()) {
         return priority;
       }
     }

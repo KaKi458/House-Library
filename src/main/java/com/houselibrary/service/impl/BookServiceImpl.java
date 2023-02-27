@@ -4,6 +4,7 @@ import com.houselibrary.dto.request.BookRequest;
 import com.houselibrary.model.Author;
 import com.houselibrary.model.Book;
 import com.houselibrary.exception.HouseLibraryException;
+import com.houselibrary.model.Priority;
 import com.houselibrary.model.Subcategory;
 import com.houselibrary.repository.BookRepository;
 import com.houselibrary.service.AuthorService;
@@ -31,6 +32,7 @@ public class BookServiceImpl implements BookService {
     Book book = Book.builder()
                     .title(bookRequest.getTitle())
                     .subcategory(subcategory)
+                    .priority(Priority.fromValue(bookRequest.getPriority()))
                     .build();
     List<Author> authors = getAuthorsFromRequest(bookRequest);
     addAuthors(book, authors);
@@ -56,6 +58,7 @@ public class BookServiceImpl implements BookService {
     List<Author> authors = getAuthorsFromRequest(bookRequest);
     addAuthors(book, authors);
     book.setTitle(bookRequest.getTitle());
+    book.setPriority(Priority.fromValue(bookRequest.getPriority()));
     bookRepository.save(book);
     return book;
   }

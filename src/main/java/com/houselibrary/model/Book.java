@@ -19,12 +19,12 @@ public class Book {
   @Column(nullable = false)
   private String title;
 
-  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "books", cascade = CascadeType.MERGE)
+  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "books")
   private List<Author> authors;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   private Subcategory subcategory;
 
-  //    @Enumerated(EnumType.STRING)
-  //    private Priority priority;
+  @Enumerated(EnumType.STRING)
+  private Priority priority;
 }

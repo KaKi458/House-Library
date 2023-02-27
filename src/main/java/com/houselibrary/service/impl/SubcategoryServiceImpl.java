@@ -4,6 +4,7 @@ import com.houselibrary.dto.request.SubcategoryRequest;
 import com.houselibrary.model.Book;
 import com.houselibrary.model.Category;
 import com.houselibrary.exception.HouseLibraryException;
+import com.houselibrary.model.Priority;
 import com.houselibrary.model.Subcategory;
 import com.houselibrary.repository.SubcategoryRepository;
 import com.houselibrary.service.CategoryService;
@@ -65,6 +66,12 @@ public class SubcategoryServiceImpl implements SubcategoryService {
   public List<Book> getSubcategoryBooks(Long subcategoryId) {
     Subcategory subcategory = getSubcategory(subcategoryId);
     return subcategory.getBooks();
+  }
+
+  @Override
+  public List<Book> getSubcategoryBooksByPriority(Long subcategoryId, int priority) {
+    Subcategory subcategory = getSubcategory(subcategoryId);
+    return subcategory.getBooksByPriority(Priority.fromValue(priority));
   }
 
   private void removeAllBooksFromSubcategory(Subcategory subcategory) {
