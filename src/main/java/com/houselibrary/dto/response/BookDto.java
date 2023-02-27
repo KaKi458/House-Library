@@ -1,6 +1,5 @@
 package com.houselibrary.dto.response;
 
-import com.houselibrary.model.Priority;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

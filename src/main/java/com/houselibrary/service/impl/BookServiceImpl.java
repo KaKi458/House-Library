@@ -1,9 +1,9 @@
 package com.houselibrary.service.impl;
 
 import com.houselibrary.dto.request.BookRequest;
+import com.houselibrary.exception.HouseLibraryException;
 import com.houselibrary.model.Author;
 import com.houselibrary.model.Book;
-import com.houselibrary.exception.HouseLibraryException;
 import com.houselibrary.model.Priority;
 import com.houselibrary.model.Subcategory;
 import com.houselibrary.repository.BookRepository;
@@ -29,11 +29,12 @@ public class BookServiceImpl implements BookService {
   @Override
   public Book addBook(BookRequest bookRequest) {
     Subcategory subcategory = subcategoryService.getSubcategory(bookRequest.getSubcategoryId());
-    Book book = Book.builder()
-                    .title(bookRequest.getTitle())
-                    .subcategory(subcategory)
-                    .priority(Priority.fromValue(bookRequest.getPriority()))
-                    .build();
+    Book book =
+        Book.builder()
+            .title(bookRequest.getTitle())
+            .subcategory(subcategory)
+            .priority(Priority.fromValue(bookRequest.getPriority()))
+            .build();
     List<Author> authors = getAuthorsFromRequest(bookRequest);
     addAuthors(book, authors);
     bookRepository.save(book);

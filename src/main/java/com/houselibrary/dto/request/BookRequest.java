@@ -1,6 +1,5 @@
 package com.houselibrary.dto.request;
 
-import com.houselibrary.model.Priority;
 import lombok.Getter;
 
 import java.util.List;

@@ -5,7 +5,6 @@ import com.houselibrary.dto.response.BookDto;
 import com.houselibrary.dto.response.SubcategoryDto;
 import com.houselibrary.mapper.ModelMapper;
 import com.houselibrary.model.Book;
-import com.houselibrary.model.Priority;
 import com.houselibrary.model.Subcategory;
 import com.houselibrary.service.SubcategoryService;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +68,7 @@ public class SubcategoryController {
 
   @GetMapping("/{subcategoryId}/books/{priority}")
   public ResponseEntity<List<BookDto>> getSubcategoryBooksByPriority(
-          @PathVariable Long subcategoryId, @PathVariable int priority) {
+      @PathVariable Long subcategoryId, @PathVariable int priority) {
     List<Book> books = subcategoryService.getSubcategoryBooksByPriority(subcategoryId, priority);
     List<BookDto> booksDto = modelMapper.mapToBookDtoList(books);
     return ResponseEntity.ok(booksDto);

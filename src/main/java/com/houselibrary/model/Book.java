@@ -2,6 +2,7 @@ package com.houselibrary.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 @Entity
@@ -22,8 +23,7 @@ public class Book {
   @ManyToMany(fetch = FetchType.EAGER, mappedBy = "books")
   private List<Author> authors;
 
-  @ManyToOne
-  private Subcategory subcategory;
+  @ManyToOne private Subcategory subcategory;
 
   @Enumerated(EnumType.STRING)
   private Priority priority;
