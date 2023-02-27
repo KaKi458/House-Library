@@ -1,8 +1,7 @@
 package com.houselibrary.model;
 
+import jakarta.persistence.*;
 import lombok.*;
-
-import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -20,7 +19,7 @@ public class Book {
   @Column(nullable = false)
   private String title;
 
-  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "books")
+  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "books", cascade = CascadeType.MERGE)
   private List<Author> authors;
 
   @ManyToOne(fetch = FetchType.LAZY)

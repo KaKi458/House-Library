@@ -1,10 +1,9 @@
 package com.houselibrary.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class Category {
   @Column(nullable = false)
   private String name;
 
-  @OneToMany(mappedBy = "category")
+  @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
   private List<Subcategory> subcategories;
 
   public Category(String name) {

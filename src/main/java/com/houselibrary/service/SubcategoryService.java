@@ -3,8 +3,7 @@ package com.houselibrary.service;
 import com.houselibrary.dto.request.SubcategoryRequest;
 import com.houselibrary.model.Book;
 import com.houselibrary.model.Subcategory;
-
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public interface SubcategoryService {
