@@ -1,25 +1,25 @@
 package com.houselibrary.service;
 
 import com.houselibrary.dto.request.SubcategoryRequest;
-import com.houselibrary.model.Book;
-import com.houselibrary.model.Subcategory;
+import com.houselibrary.dto.response.BookDto;
+import com.houselibrary.dto.response.SubcategoryDto;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public interface SubcategoryService {
 
-  Subcategory addSubcategory(@NotNull SubcategoryRequest subcategoryRequest);
+  SubcategoryDto addSubcategory(@NotNull SubcategoryRequest subcategoryRequest);
 
-  Subcategory getSubcategory(@NotNull Long subcategoryId);
+  SubcategoryDto getSubcategory(@NotNull Long subcategoryId);
 
-  Subcategory updateSubcategory(@NotNull Long subcategoryId, SubcategoryRequest subcategoryRequest);
+  SubcategoryDto updateSubcategory(@NotNull Long subcategoryId, SubcategoryRequest subcategoryRequest);
 
   void deleteSubcategory(@NotNull Long subcategoryId);
 
-  List<Subcategory> getAllSubcategories();
+  List<SubcategoryDto> getAllSubcategories();
 
-  List<Book> getSubcategoryBooks(@NotNull Long subcategoryId);
+  List<BookDto> getSubcategoryBooks(@NotNull Long subcategoryId);
 
-  List<Book> getSubcategoryBooksByPriority(@NotNull Long subcategoryId, @NotNull int priority);
+  List<BookDto> getSubcategoryBooksByPriority(@NotNull Long subcategoryId, @NotNull int priority);
 }

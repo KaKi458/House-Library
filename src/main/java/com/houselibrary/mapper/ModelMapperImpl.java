@@ -46,10 +46,14 @@ public class ModelMapperImpl implements ModelMapper {
         BookDto.builder()
             .bookId(book.getId())
             .title(book.getTitle())
-            .categoryId(book.getSubcategory().getCategory().getId())
-            .categoryName(book.getSubcategory().getCategory().getName())
-            .subcategoryId(book.getSubcategory().getId())
-            .subcategoryName(book.getSubcategory().getName())
+            .categoryId(book.getCategory() != null
+                    ? book.getCategory().getId() : null)
+            .categoryName(book.getCategory() != null
+                    ? book.getCategory().getName() : null)
+            .subcategoryId(book.getCategory() != null
+                    ? book.getSubcategory().getId() : null)
+            .subcategoryName(book.getCategory() != null
+                    ? book.getSubcategory().getName() : null)
             .priority(book.getPriority().getValue())
             .build();
     List<AuthorDto> authorsDto = new ArrayList<>();

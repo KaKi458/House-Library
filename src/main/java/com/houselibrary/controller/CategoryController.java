@@ -4,10 +4,6 @@ import com.houselibrary.dto.request.CategoryRequest;
 import com.houselibrary.dto.response.BookDto;
 import com.houselibrary.dto.response.CategoryDto;
 import com.houselibrary.dto.response.SubcategoryDto;
-import com.houselibrary.mapper.ModelMapper;
-import com.houselibrary.model.Book;
-import com.houselibrary.model.Category;
-import com.houselibrary.model.Subcategory;
 import com.houselibrary.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,34 +18,29 @@ import java.util.List;
 public class CategoryController {
 
   private final CategoryService categoryService;
-  private final ModelMapper modelMapper;
 
   @PostMapping
   public ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryRequest categoryRequest) {
-    Category category = categoryService.addCategory(categoryRequest);
-    CategoryDto categoryDto = modelMapper.mapToCategoryDto(category);
+    CategoryDto categoryDto = categoryService.addCategory(categoryRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(categoryDto);
   }
 
   @GetMapping
   public ResponseEntity<List<CategoryDto>> getAllCategories() {
-    List<Category> categories = categoryService.getAllCategories();
-    List<CategoryDto> categoriesDto = modelMapper.mapToCategoryDtoList(categories);
+    List<CategoryDto> categoriesDto = categoryService.getAllCategories();
     return ResponseEntity.ok().body(categoriesDto);
   }
 
   @GetMapping("/{categoryId}")
   public ResponseEntity<CategoryDto> getCategory(@PathVariable Long categoryId) {
-    Category category = categoryService.getCategory(categoryId);
-    CategoryDto categoryDto = modelMapper.mapToCategoryDto(category);
+    CategoryDto categoryDto = categoryService.getCategory(categoryId);
     return ResponseEntity.ok().body(categoryDto);
   }
 
   @PutMapping("/{categoryId}")
   public ResponseEntity<CategoryDto> updateCategory(
       @PathVariable Long categoryId, @RequestBody CategoryRequest categoryRequest) {
-    Category category = categoryService.updateCategory(categoryId, categoryRequest);
-    CategoryDto categoryDto = modelMapper.mapToCategoryDto(category);
+    CategoryDto categoryDto = categoryService.updateCategory(categoryId, categoryRequest);
     return ResponseEntity.ok().body(categoryDto);
   }
 
@@ -61,16 +52,14 @@ public class CategoryController {
 
   @GetMapping("/{categoryId}/books")
   public ResponseEntity<List<BookDto>> getCategoryBooks(@PathVariable Long categoryId) {
-    List<Book> books = categoryService.getCategoryBooks(categoryId);
-    List<BookDto> booksDto = modelMapper.mapToBookDtoList(books);
+    List<BookDto> booksDto = categoryService.getCategoryBooks(categoryId);
     return ResponseEntity.ok(booksDto);
   }
 
   @GetMapping("/{categoryId}/subcategories")
   public ResponseEntity<List<SubcategoryDto>> getCategorySubcategories(
       @PathVariable Long categoryId) {
-    List<Subcategory> subcategories = categoryService.getCategorySubcategories(categoryId);
-    List<SubcategoryDto> subcategoriesDto = modelMapper.mapToSubcategoryDtoList(subcategories);
+    List<SubcategoryDto> subcategoriesDto = categoryService.getCategorySubcategories(categoryId);
     return ResponseEntity.ok(subcategoriesDto);
   }
 }
