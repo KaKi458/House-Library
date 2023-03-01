@@ -23,8 +23,13 @@ public class Book {
   @ManyToMany(fetch = FetchType.EAGER, mappedBy = "books")
   private List<Author> authors;
 
-  @ManyToOne private Subcategory subcategory;
+  @ManyToOne
+  private Subcategory subcategory;
 
   @Enumerated(EnumType.STRING)
   private Priority priority;
+
+  public Category getCategory() {
+    return subcategory != null ? subcategory.getCategory() : null;
+  }
 }

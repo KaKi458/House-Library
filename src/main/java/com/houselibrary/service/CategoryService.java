@@ -1,26 +1,26 @@
 package com.houselibrary.service;
 
 import com.houselibrary.dto.request.CategoryRequest;
-import com.houselibrary.model.Book;
-import com.houselibrary.model.Category;
-import com.houselibrary.model.Subcategory;
+import com.houselibrary.dto.response.BookDto;
+import com.houselibrary.dto.response.CategoryDto;
+import com.houselibrary.dto.response.SubcategoryDto;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public interface CategoryService {
 
-  Category addCategory(@NotNull CategoryRequest categoryRequest);
+  CategoryDto addCategory(@NotNull CategoryRequest categoryRequest);
 
-  Category getCategory(@NotNull Long categoryId);
+  CategoryDto getCategory(@NotNull Long categoryId);
 
-  Category updateCategory(@NotNull Long categoryId, CategoryRequest categoryRequest);
+  CategoryDto updateCategory(@NotNull Long categoryId, CategoryRequest categoryRequest);
 
   void deleteCategory(@NotNull Long categoryId);
 
-  List<Category> getAllCategories();
+  List<CategoryDto> getAllCategories();
 
-  List<Book> getCategoryBooks(@NotNull Long categoryId);
+  List<BookDto> getCategoryBooks(@NotNull Long categoryId);
 
-  List<Subcategory> getCategorySubcategories(@NotNull Long categoryId);
+  List<SubcategoryDto> getCategorySubcategories(@NotNull Long categoryId);
 }

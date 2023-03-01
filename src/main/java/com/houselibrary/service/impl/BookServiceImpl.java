@@ -1,36 +1,37 @@
 package com.houselibrary.service.impl;
 
 import com.houselibrary.dto.request.BookRequest;
+import com.houselibrary.dto.response.BookDto;
 import com.houselibrary.exception.HouseLibraryException;
+import com.houselibrary.mapper.ModelMapper;
 import com.houselibrary.model.Author;
 import com.houselibrary.model.Book;
 import com.houselibrary.model.Priority;
 import com.houselibrary.model.Subcategory;
+import com.houselibrary.repository.AuthorRepository;
 import com.houselibrary.repository.BookRepository;
-import com.houselibrary.service.AuthorService;
+import com.houselibrary.repository.SubcategoryRepository;
 import com.houselibrary.service.BookService;
-import com.houselibrary.service.SubcategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
   private final BookRepository bookRepository;
-  private final AuthorService authorService;
-  private final SubcategoryService subcategoryService;
+  private final AuthorRepository authorRepository;
+  private final SubcategoryRepository subcategoryRepository;
+  private final ModelMapper mapper;
 
   @Override
-  public Book addBook(BookRequest bookRequest) {
-    Subcategory subcategory = subcategoryService.getSubcategory(bookRequest.getSubcategoryId());
-    Book book =
-        Book.builder()
+  public BookDto addBook(BookRequest bookRequest) {
+    Subcategory subcategory = findSubcategory(bookRequest.getSubcategoryId());
+    Book book = Book.builder()
             .title(bookRequest.getTitle())
             .subcategory(subcategory)
             .priority(Priority.fromValue(bookRequest.getPriority()))
@@ -38,22 +39,19 @@ public class BookServiceImpl implements BookService {
     List<Author> authors = getAuthorsFromRequest(bookRequest);
     addAuthors(book, authors);
     bookRepository.save(book);
-    return book;
+    return mapper.mapToBookDto(book);
   }
 
   @Override
-  public Book getBook(Long bookId) {
-    Optional<Book> bookOptional = bookRepository.findById(bookId);
-    if (bookOptional.isEmpty()) {
-      throw new HouseLibraryException(HttpStatus.NOT_FOUND, "Book with given ID does not exist");
-    }
-    return bookOptional.get();
+  public BookDto getBook(Long bookId) {
+    Book book = findBook(bookId);
+    return mapper.mapToBookDto(book);
   }
 
   @Override
-  public Book updateBook(Long bookId, BookRequest bookRequest) {
-    Book book = getBook(bookId);
-    Subcategory subcategory = subcategoryService.getSubcategory(bookRequest.getSubcategoryId());
+  public BookDto updateBook(Long bookId, BookRequest bookRequest) {
+    Book book = findBook(bookId);
+    Subcategory subcategory = findSubcategory(bookRequest.getSubcategoryId());
     book.setSubcategory(subcategory);
     removeAuthors(book);
     List<Author> authors = getAuthorsFromRequest(bookRequest);
@@ -61,29 +59,31 @@ public class BookServiceImpl implements BookService {
     book.setTitle(bookRequest.getTitle());
     book.setPriority(Priority.fromValue(bookRequest.getPriority()));
     bookRepository.save(book);
-    return book;
+    return mapper.mapToBookDto(book);
   }
 
   @Override
   public void deleteBook(Long bookId) {
-    Book book = getBook(bookId);
+    Book book = findBook(bookId);
+    removeAuthors(book);
     bookRepository.delete(book);
   }
 
   @Override
-  public List<Book> getBooksByTitle(String bookName) {
+  public List<BookDto> getBooksByTitle(String bookName) {
     return null;
   }
 
   @Override
-  public List<Book> getAllBooks() {
-    return bookRepository.findAll();
+  public List<BookDto> getAllBooks() {
+    List<Book> books = bookRepository.findAll();
+    return mapper.mapToBookDtoList(books);
   }
 
   private List<Author> getAuthorsFromRequest(BookRequest bookRequest) {
     List<Author> authors = new ArrayList<>();
     for (Long authorId : bookRequest.getAuthors()) {
-      Author author = authorService.getAuthor(authorId);
+      Author author = findAuthor(authorId);
       authors.add(author);
     }
     return authors;
@@ -100,5 +100,23 @@ public class BookServiceImpl implements BookService {
     for (Author author : book.getAuthors()) {
       author.removeBook(book);
     }
+  }
+
+  private Subcategory findSubcategory(Long subcategoryId) {
+    return subcategoryRepository.findById(subcategoryId)
+            .orElseThrow(() -> new HouseLibraryException(
+                    HttpStatus.NOT_FOUND, "Subcategory with given ID does not exist"));
+  }
+
+  private Author findAuthor(Long authorID) {
+    return authorRepository.findById(authorID)
+            .orElseThrow(() -> new HouseLibraryException(
+                    HttpStatus.NOT_FOUND, "Author with given ID does not exist"));
+  }
+
+  private Book findBook(Long bookId) {
+    return bookRepository.findById(bookId)
+            .orElseThrow(() -> new HouseLibraryException(
+                    HttpStatus.NOT_FOUND, "Book with given ID does not exis t"));
   }
 }

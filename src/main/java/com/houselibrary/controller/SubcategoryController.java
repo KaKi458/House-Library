@@ -3,9 +3,6 @@ package com.houselibrary.controller;
 import com.houselibrary.dto.request.SubcategoryRequest;
 import com.houselibrary.dto.response.BookDto;
 import com.houselibrary.dto.response.SubcategoryDto;
-import com.houselibrary.mapper.ModelMapper;
-import com.houselibrary.model.Book;
-import com.houselibrary.model.Subcategory;
 import com.houselibrary.service.SubcategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,36 +17,31 @@ import java.util.List;
 public class SubcategoryController {
 
   private final SubcategoryService subcategoryService;
-  private final ModelMapper modelMapper;
 
   @PostMapping
   public ResponseEntity<SubcategoryDto> addSubcategory(
       @RequestBody SubcategoryRequest subcategoryRequest) {
-    Subcategory subcategory = subcategoryService.addSubcategory(subcategoryRequest);
-    SubcategoryDto subcategoryDto = modelMapper.mapToSubcategoryDto(subcategory);
+    SubcategoryDto subcategoryDto = subcategoryService.addSubcategory(subcategoryRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(subcategoryDto);
   }
 
   @GetMapping
   public ResponseEntity<List<SubcategoryDto>> getAllSubcategories() {
-    List<Subcategory> subcategories = subcategoryService.getAllSubcategories();
-    List<SubcategoryDto> subcategoriesDto = modelMapper.mapToSubcategoryDtoList(subcategories);
+    List<SubcategoryDto> subcategoriesDto = subcategoryService.getAllSubcategories();
     return ResponseEntity.ok(subcategoriesDto);
   }
 
   @GetMapping("/{subcategoryId}")
   public ResponseEntity<SubcategoryDto> getSubcategory(@PathVariable Long subcategoryId) {
-    Subcategory subcategory = subcategoryService.getSubcategory(subcategoryId);
-    SubcategoryDto subcategoryDto = modelMapper.mapToSubcategoryDto(subcategory);
+    SubcategoryDto subcategoryDto = subcategoryService.getSubcategory(subcategoryId);
     return ResponseEntity.ok(subcategoryDto);
   }
 
   @PutMapping("/{subcategoryId}")
   public ResponseEntity<SubcategoryDto> updateCategory(
       @PathVariable Long subcategoryId, @RequestBody SubcategoryRequest subcategoryRequest) {
-    Subcategory subcategory =
-        subcategoryService.updateSubcategory(subcategoryId, subcategoryRequest);
-    SubcategoryDto subcategoryDto = modelMapper.mapToSubcategoryDto(subcategory);
+    SubcategoryDto subcategoryDto =
+            subcategoryService.updateSubcategory(subcategoryId, subcategoryRequest);
     return ResponseEntity.ok().body(subcategoryDto);
   }
 
@@ -61,16 +53,14 @@ public class SubcategoryController {
 
   @GetMapping("/{subcategoryId}/books")
   public ResponseEntity<List<BookDto>> getSubcategoryBooks(@PathVariable Long subcategoryId) {
-    List<Book> books = subcategoryService.getSubcategoryBooks(subcategoryId);
-    List<BookDto> booksDto = modelMapper.mapToBookDtoList(books);
+    List<BookDto> booksDto = subcategoryService.getSubcategoryBooks(subcategoryId);
     return ResponseEntity.ok(booksDto);
   }
 
   @GetMapping("/{subcategoryId}/books/{priority}")
   public ResponseEntity<List<BookDto>> getSubcategoryBooksByPriority(
       @PathVariable Long subcategoryId, @PathVariable int priority) {
-    List<Book> books = subcategoryService.getSubcategoryBooksByPriority(subcategoryId, priority);
-    List<BookDto> booksDto = modelMapper.mapToBookDtoList(books);
+    List<BookDto> booksDto = subcategoryService.getSubcategoryBooksByPriority(subcategoryId, priority);
     return ResponseEntity.ok(booksDto);
   }
 }

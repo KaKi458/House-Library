@@ -20,7 +20,8 @@ public class Subcategory {
   @Column(nullable = false)
   private String name;
 
-  @ManyToOne private Category category;
+  @ManyToOne
+  private Category category;
 
   @OneToMany(mappedBy = "subcategory")
   private List<Book> books;

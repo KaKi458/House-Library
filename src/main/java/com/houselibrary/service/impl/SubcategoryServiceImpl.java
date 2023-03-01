@@ -1,78 +1,83 @@
 package com.houselibrary.service.impl;
 
 import com.houselibrary.dto.request.SubcategoryRequest;
+import com.houselibrary.dto.response.BookDto;
+import com.houselibrary.dto.response.SubcategoryDto;
 import com.houselibrary.exception.HouseLibraryException;
+import com.houselibrary.mapper.ModelMapper;
 import com.houselibrary.model.Book;
 import com.houselibrary.model.Category;
 import com.houselibrary.model.Priority;
 import com.houselibrary.model.Subcategory;
+import com.houselibrary.repository.CategoryRepository;
 import com.houselibrary.repository.SubcategoryRepository;
-import com.houselibrary.service.CategoryService;
 import com.houselibrary.service.SubcategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Setter
 public class SubcategoryServiceImpl implements SubcategoryService {
 
   private final SubcategoryRepository subcategoryRepository;
-  private final CategoryService categoryService;
+  private final CategoryRepository categoryRepository;
+  private final ModelMapper mapper;
+
 
   @Override
-  public Subcategory addSubcategory(SubcategoryRequest subcategoryRequest) {
-    Category category = categoryService.getCategory(subcategoryRequest.getCategoryId());
+  public SubcategoryDto addSubcategory(SubcategoryRequest subcategoryRequest) {
+    Category category = findCategory(subcategoryRequest.getCategoryId());
     Subcategory subcategory = new Subcategory(subcategoryRequest.getSubcategoryName(), category);
     subcategoryRepository.save(subcategory);
-    return subcategory;
+    return mapper.mapToSubcategoryDto(subcategory);
   }
 
   @Override
-  public Subcategory getSubcategory(Long subcategoryId) {
-    Optional<Subcategory> subcategoryOptional = subcategoryRepository.findById(subcategoryId);
-    if (subcategoryOptional.isEmpty()) {
-      throw new HouseLibraryException(
-          HttpStatus.NOT_FOUND, "Subcategory with given ID does not exist");
-    }
-    return subcategoryOptional.get();
+  public SubcategoryDto getSubcategory(Long subcategoryId) {
+    Subcategory subcategory = findSubcategory(subcategoryId);
+    return mapper.mapToSubcategoryDto(subcategory);
   }
 
   @Override
-  public Subcategory updateSubcategory(Long subcategoryId, SubcategoryRequest subcategoryRequest) {
-    Subcategory subcategory = getSubcategory(subcategoryId);
-    Category category = categoryService.getCategory(subcategoryRequest.getCategoryId());
+  public SubcategoryDto updateSubcategory(Long subcategoryId, SubcategoryRequest subcategoryRequest) {
+    Subcategory subcategory = findSubcategory(subcategoryId);
+    Category category = findCategory(subcategoryRequest.getCategoryId());
     subcategory.setName(subcategoryRequest.getSubcategoryName());
     subcategory.setCategory(category);
     subcategoryRepository.save(subcategory);
-    return subcategory;
+    return mapper.mapToSubcategoryDto(subcategory);
   }
 
   @Override
   public void deleteSubcategory(Long subcategoryId) {
-    Subcategory subcategory = getSubcategory(subcategoryId);
+    Subcategory subcategory = findSubcategory(subcategoryId);
     removeAllBooksFromSubcategory(subcategory);
     subcategoryRepository.delete(subcategory);
   }
 
   @Override
-  public List<Subcategory> getAllSubcategories() {
-    return subcategoryRepository.findAll();
+  public List<SubcategoryDto> getAllSubcategories() {
+    List<Subcategory> subcategories = subcategoryRepository.findAll();
+    return mapper.mapToSubcategoryDtoList(subcategories);
   }
 
   @Override
-  public List<Book> getSubcategoryBooks(Long subcategoryId) {
-    Subcategory subcategory = getSubcategory(subcategoryId);
-    return subcategory.getBooks();
+  public List<BookDto> getSubcategoryBooks(Long subcategoryId) {
+    Subcategory subcategory = findSubcategory(subcategoryId);
+    List<Book> books = subcategory.getBooks();
+    return mapper.mapToBookDtoList(books);
   }
 
   @Override
-  public List<Book> getSubcategoryBooksByPriority(Long subcategoryId, int priority) {
-    Subcategory subcategory = getSubcategory(subcategoryId);
-    return getBooksByPriority(subcategory, Priority.fromValue(priority));
+  public List<BookDto> getSubcategoryBooksByPriority(Long subcategoryId, int priority) {
+    Subcategory subcategory = findSubcategory(subcategoryId);
+    List<Book> books = getBooksByPriority(subcategory, Priority.fromValue(priority));
+    return mapper.mapToBookDtoList(books);
   }
 
   private void removeAllBooksFromSubcategory(Subcategory subcategory) {
@@ -81,7 +86,22 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     }
   }
 
-  public List<Book> getBooksByPriority(Subcategory subcategory, Priority priority) {
-    return subcategory.getBooks().stream().filter(book -> book.getPriority() == priority).toList();
+  private List<Book> getBooksByPriority(Subcategory subcategory, Priority priority) {
+    return subcategory.getBooks()
+            .stream()
+            .filter(book -> book.getPriority() == priority)
+            .toList();
+  }
+
+  private Subcategory findSubcategory(Long subcategoryId) {
+    return subcategoryRepository.findById(subcategoryId)
+            .orElseThrow(() -> new HouseLibraryException(
+                    HttpStatus.NOT_FOUND, "Subcategory with given ID does not exist"));
+  }
+
+  private Category findCategory(Long categoryId) {
+    return categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new HouseLibraryException(
+                    HttpStatus.NOT_FOUND, "Category with given ID does not exist"));
   }
 }
