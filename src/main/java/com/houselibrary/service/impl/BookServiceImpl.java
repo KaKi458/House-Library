@@ -13,6 +13,10 @@ import com.houselibrary.repository.BookRepository;
 import com.houselibrary.repository.SubcategoryRepository;
 import com.houselibrary.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +34,23 @@ public class BookServiceImpl implements BookService {
 
   @Override
   public BookDto addBook(BookRequest bookRequest) {
+
     Subcategory subcategory = findSubcategory(bookRequest.getSubcategoryId());
+
+    Priority priority = bookRequest.getPriority() != null
+            ? Priority.valueOf(bookRequest.getPriority())
+            : Priority.defaultPriority;
+
     Book book = Book.builder()
             .title(bookRequest.getTitle())
             .subcategory(subcategory)
-            .priority(Priority.fromValue(bookRequest.getPriority()))
+            .priority(priority)
             .build();
+
     List<Author> authors = getAuthorsFromRequest(bookRequest);
     addAuthors(book, authors);
     bookRepository.save(book);
+
     return mapper.mapToBookDto(book);
   }
 
@@ -50,14 +62,19 @@ public class BookServiceImpl implements BookService {
 
   @Override
   public BookDto updateBook(Long bookId, BookRequest bookRequest) {
+
     Book book = findBook(bookId);
     Subcategory subcategory = findSubcategory(bookRequest.getSubcategoryId());
+    Priority priority = bookRequest.getPriority() != null
+            ? Priority.valueOf(bookRequest.getPriority())
+            : Priority.defaultPriority;
+
     book.setSubcategory(subcategory);
     removeAuthors(book);
     List<Author> authors = getAuthorsFromRequest(bookRequest);
     addAuthors(book, authors);
     book.setTitle(bookRequest.getTitle());
-    book.setPriority(Priority.fromValue(bookRequest.getPriority()));
+    book.setPriority(priority);
     bookRepository.save(book);
     return mapper.mapToBookDto(book);
   }
@@ -75,8 +92,13 @@ public class BookServiceImpl implements BookService {
   }
 
   @Override
-  public List<BookDto> getAllBooks() {
-    List<Book> books = bookRepository.findAll();
+  public List<BookDto> getAllBooks(int pageNo, int pageSize, String sortParam, String sortDir) {
+    Sort sort = Sort.by(sortParam);
+    sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+            ? sort.ascending() : sort.descending();
+    Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    Page<Book> bookPage = bookRepository.findAll(pageable);
+    List<Book> books = bookPage.getContent();
     return mapper.mapToBookDtoList(books);
   }
 

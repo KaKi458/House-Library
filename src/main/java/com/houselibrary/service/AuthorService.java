@@ -20,7 +20,7 @@ public interface AuthorService {
 
   List<AuthorDto> getAuthorsByName(@NotNull String authorName);
 
-  List<AuthorDto> getAllAuthors();
+  List<AuthorDto> getAllAuthors(int pageNo, int pageSize, String sortParam, String sortDir);
 
   List<BookDto> getAuthorBooks(@NotNull Long authorId);
 }

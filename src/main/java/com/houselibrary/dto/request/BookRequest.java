@@ -10,5 +10,5 @@ public class BookRequest {
   private String title;
   private Long subcategoryId;
   private List<Long> authors;
-  private int priority;
+  private String priority;
 }

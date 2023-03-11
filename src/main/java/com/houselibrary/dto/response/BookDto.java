@@ -1,5 +1,6 @@
 package com.houselibrary.dto.response;
 
+import com.houselibrary.model.Priority;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,6 @@ public class BookDto {
   private String categoryName;
   private Long subcategoryId;
   private String subcategoryName;
-  private int priority;
+  private Priority priority;
   private List<AuthorDto> authors;
 }

@@ -6,6 +6,7 @@ public enum Priority {
   MEDIUM(2),
   HIGH(3);
 
+  public static final Priority defaultPriority = Priority.LOW;
   private final int value;
 
   Priority(int value) {

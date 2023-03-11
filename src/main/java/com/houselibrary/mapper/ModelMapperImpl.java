@@ -4,10 +4,7 @@ import com.houselibrary.dto.response.AuthorDto;
 import com.houselibrary.dto.response.BookDto;
 import com.houselibrary.dto.response.CategoryDto;
 import com.houselibrary.dto.response.SubcategoryDto;
-import com.houselibrary.model.Author;
-import com.houselibrary.model.Book;
-import com.houselibrary.model.Category;
-import com.houselibrary.model.Subcategory;
+import com.houselibrary.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -54,7 +51,7 @@ public class ModelMapperImpl implements ModelMapper {
                     ? book.getSubcategory().getId() : null)
             .subcategoryName(book.getCategory() != null
                     ? book.getSubcategory().getName() : null)
-            .priority(book.getPriority().getValue())
+            .priority(book.getPriority())
             .build();
     List<AuthorDto> authorsDto = new ArrayList<>();
     for (Author author : book.getAuthors()) {

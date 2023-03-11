@@ -1,0 +1,50 @@
+CREATE DATABASE IF NOT EXISTS `house_library`;
+USE `house_library`;
+
+DROP TABLE IF EXISTS `author_book`;
+DROP TABLE IF EXISTS `book`;
+DROP TABLE IF EXISTS `author`;
+DROP TABLE IF EXISTS `subcategory`;
+DROP TABLE IF EXISTS `category`;
+
+CREATE TABLE `category`
+(
+    `id`   bigint       NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `subcategory`
+(
+    `id`          bigint       NOT NULL AUTO_INCREMENT,
+    `name`        varchar(255) NOT NULL,
+    `category_id` bigint DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
+);
+
+CREATE TABLE `author`
+(
+    `id`         bigint       NOT NULL AUTO_INCREMENT,
+    `first_name` varchar(255) NOT NULL,
+    `last_name`  varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `book`
+(
+    `id`             bigint       NOT NULL AUTO_INCREMENT,
+    `priority`       varchar(255) DEFAULT 'LOW',
+    `title`          varchar(255) NOT NULL,
+    `subcategory_id` bigint       DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`subcategory_id`) REFERENCES `subcategory` (`id`)
+);
+
+CREATE TABLE `author_book`
+(
+    `author_id` bigint NOT NULL,
+    `book_id`   bigint NOT NULL,
+    FOREIGN KEY (`author_id`) REFERENCES `author` (`id`),
+    FOREIGN KEY (`book_id`) REFERENCES `book` (`id`)
+);

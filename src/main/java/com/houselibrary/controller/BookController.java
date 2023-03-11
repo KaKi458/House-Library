@@ -24,8 +24,13 @@ public class BookController {
   }
 
   @GetMapping
-  public ResponseEntity<List<BookDto>> getAllBooks() {
-    List<BookDto> booksDto = bookService.getAllBooks();
+  public ResponseEntity<List<BookDto>> getAllBooks(
+          @RequestParam(required = false, defaultValue = "1") int pageNo,
+          @RequestParam(required = false, defaultValue = "10") int pageSize,
+          @RequestParam(required = false, defaultValue = "title") String sortParam,
+          @RequestParam(required = false, defaultValue = "asc") String sortDir
+  ) {
+    List<BookDto> booksDto = bookService.getAllBooks(pageNo, pageSize, sortParam, sortDir);
     return ResponseEntity.ok().body(booksDto);
   }
 

@@ -19,5 +19,5 @@ public interface BookService {
 
   List<BookDto> getBooksByTitle(@NotNull String bookName);
 
-  List<BookDto> getAllBooks();
+  List<BookDto> getAllBooks(int pageNo, int pageSize, String sortParam, String sortDir);
 }

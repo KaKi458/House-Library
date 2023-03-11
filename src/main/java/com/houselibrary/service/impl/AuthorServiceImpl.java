@@ -10,6 +10,10 @@ import com.houselibrary.model.Book;
 import com.houselibrary.repository.AuthorRepository;
 import com.houselibrary.service.AuthorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +60,13 @@ public class AuthorServiceImpl implements AuthorService {
   }
 
   @Override
-  public List<AuthorDto> getAllAuthors() {
-    List<Author> authors = authorRepository.findAll();
+  public List<AuthorDto> getAllAuthors(int pageNo, int pageSize, String sortParam, String sortDir) {
+    Sort sort = Sort.by(sortParam);
+    sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+            ? sort.ascending() : sort.descending();
+    Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    Page<Author> page = authorRepository.findAll(pageable);
+    List<Author> authors = page.getContent();
     return mapper.mapToAuthorDtoList(authors);
   }
 

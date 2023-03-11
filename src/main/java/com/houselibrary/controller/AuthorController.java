@@ -25,8 +25,13 @@ public class AuthorController {
   }
 
   @GetMapping
-  public ResponseEntity<List<AuthorDto>> getAllAuthors() {
-    List<AuthorDto> authorsDto = authorService.getAllAuthors();
+  public ResponseEntity<List<AuthorDto>> getAllAuthors(
+          @RequestParam(required = false, defaultValue = "1") int pageNo,
+          @RequestParam(required = false, defaultValue = "10") int pageSize,
+          @RequestParam(required = false, defaultValue = "lastName") String sortParam,
+          @RequestParam(required = false, defaultValue = "asc") String sortDir
+  ) {
+    List<AuthorDto> authorsDto = authorService.getAllAuthors(pageNo, pageSize, sortParam, sortDir);
     return ResponseEntity.ok().body(authorsDto);
   }
 
