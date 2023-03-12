@@ -25,7 +25,7 @@ public class BookController {
 
   @GetMapping
   public ResponseEntity<List<BookDto>> getAllBooks(
-          @RequestParam(required = false, defaultValue = "1") int pageNo,
+          @RequestParam(required = false, defaultValue = "0") int pageNo,
           @RequestParam(required = false, defaultValue = "10") int pageSize,
           @RequestParam(required = false, defaultValue = "title") String sortParam,
           @RequestParam(required = false, defaultValue = "asc") String sortDir
