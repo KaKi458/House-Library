@@ -12,13 +12,20 @@ services:
       - "./src/main/resources/data.sql:/docker-entrypoint-initdb.d/2.sql"
     networks:
       house-library-net:
+    healthcheck:
+      test: [ "CMD-SHELL", 'mysqladmin ping' ]
+      interval: 10s
+      timeout: 2s
+      retries: 10
 
   house-library-app:
     build: .
     ports:
       - "8080:8080"
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_healthy
+
     networks:
       house-library-net:
     restart: on-failure
