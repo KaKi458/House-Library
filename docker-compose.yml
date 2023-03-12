@@ -6,12 +6,9 @@ services:
     image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: house_library
-    volumes:
-      - "./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/1.sql"
-      - "./src/main/resources/data.sql:/docker-entrypoint-initdb.d/2.sql"
     networks:
       house-library-net:
+    restart: always
     healthcheck:
       test: [ "CMD-SHELL", 'mysqladmin ping' ]
       interval: 10s
@@ -19,13 +16,15 @@ services:
       retries: 10
 
   house-library-app:
+    image: house-library
     build: .
     ports:
       - "8080:8080"
     depends_on:
       mysqldb:
         condition: service_healthy
-
+    environment:
+      MYSQL_HOST: mysqldb
     networks:
       house-library-net:
     restart: on-failure
