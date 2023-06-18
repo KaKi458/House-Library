@@ -9,14 +9,15 @@ import com.houselibrary.model.Book;
 import com.houselibrary.model.Category;
 import com.houselibrary.model.Priority;
 import com.houselibrary.model.Subcategory;
+import com.houselibrary.repository.BookRepository;
 import com.houselibrary.repository.CategoryRepository;
 import com.houselibrary.repository.SubcategoryRepository;
 import com.houselibrary.service.SubcategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -26,6 +27,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
 
   private final SubcategoryRepository subcategoryRepository;
   private final CategoryRepository categoryRepository;
+  private final BookRepository bookRepository;
   private final ModelMapper mapper;
 
 
@@ -67,16 +69,25 @@ public class SubcategoryServiceImpl implements SubcategoryService {
   }
 
   @Override
-  public List<BookDto> getSubcategoryBooks(Long subcategoryId) {
-    Subcategory subcategory = findSubcategory(subcategoryId);
-    List<Book> books = subcategory.getBooks();
-    return mapper.mapToBookDtoList(books);
-  }
+  public List<BookDto> getSubcategoryBooks(
+          Long subcategoryId, int pageNo, int pageSize, String sortParam, String sortDir, Integer priorityValue) {
 
-  @Override
-  public List<BookDto> getSubcategoryBooksByPriority(Long subcategoryId, int priority) {
-    Subcategory subcategory = findSubcategory(subcategoryId);
-    List<Book> books = getBooksByPriority(subcategory, Priority.fromValue(priority));
+    Sort sort =  Sort.by(sortParam);
+    sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+            ? sort.ascending() : sort.descending();
+    Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    Page<Book> bookPage;
+    if (priorityValue != null) {
+      try {
+        Priority priority = Priority.fromValue(priorityValue);
+        bookPage = bookRepository.findBySubcategoryIdAndPriority(subcategoryId, priority, pageable);
+      } catch (IllegalArgumentException ex) {
+        throw new HouseLibraryException(HttpStatus.BAD_REQUEST, "Invalid priority");
+      }
+    } else {
+      bookPage = bookRepository.findBySubcategoryId(subcategoryId, pageable);
+    }
+    List<Book> books = bookPage.getContent();
     return mapper.mapToBookDtoList(books);
   }
 
@@ -84,13 +95,6 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     for (Book book : subcategory.getBooks()) {
       book.setSubcategory(null);
     }
-  }
-
-  private List<Book> getBooksByPriority(Subcategory subcategory, Priority priority) {
-    return subcategory.getBooks()
-            .stream()
-            .filter(book -> book.getPriority() == priority)
-            .toList();
   }
 
   private Subcategory findSubcategory(Long subcategoryId) {

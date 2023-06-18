@@ -1,6 +1,7 @@
 package com.houselibrary.service.impl;
 
 import com.houselibrary.dto.request.BookRequest;
+import com.houselibrary.dto.request.PriorityRequest;
 import com.houselibrary.dto.response.BookDto;
 import com.houselibrary.exception.HouseLibraryException;
 import com.houselibrary.mapper.ModelMapper;
@@ -34,24 +35,25 @@ public class BookServiceImpl implements BookService {
 
   @Override
   public BookDto addBook(BookRequest bookRequest) {
-
     Subcategory subcategory = findSubcategory(bookRequest.getSubcategoryId());
-
-    Priority priority = bookRequest.getPriority() != null
-            ? Priority.valueOf(bookRequest.getPriority())
-            : Priority.defaultPriority;
-
+    Priority priority;
+    try {
+       priority = bookRequest.getPriority() != null
+              ? Priority.fromValue(bookRequest.getPriority())
+              : Priority.defaultPriority;
+    } catch (IllegalArgumentException ex) {
+      throw new HouseLibraryException(HttpStatus.BAD_REQUEST, "Invalid priority");
+    }
     Book book = Book.builder()
             .title(bookRequest.getTitle())
+            .category(subcategory.getCategory())
             .subcategory(subcategory)
             .priority(priority)
             .build();
-
     List<Author> authors = getAuthorsFromRequest(bookRequest);
     addAuthors(book, authors);
-    bookRepository.save(book);
-
-    return mapper.mapToBookDto(book);
+    Book savedBook = bookRepository.save(book);
+    return mapper.mapToBookDto(savedBook);
   }
 
   @Override
@@ -62,21 +64,24 @@ public class BookServiceImpl implements BookService {
 
   @Override
   public BookDto updateBook(Long bookId, BookRequest bookRequest) {
-
     Book book = findBook(bookId);
     Subcategory subcategory = findSubcategory(bookRequest.getSubcategoryId());
-    Priority priority = bookRequest.getPriority() != null
-            ? Priority.valueOf(bookRequest.getPriority())
-            : Priority.defaultPriority;
-
+    try {
+      Priority priority = bookRequest.getPriority() != null
+              ? Priority.fromValue(bookRequest.getPriority())
+              : book.getPriority();
+      book.setPriority(priority);
+    } catch (IllegalArgumentException ex) {
+      throw new HouseLibraryException(HttpStatus.BAD_REQUEST, "Invalid priority");
+    }
     book.setSubcategory(subcategory);
+    book.setCategory(subcategory.getCategory());
     removeAuthors(book);
     List<Author> authors = getAuthorsFromRequest(bookRequest);
     addAuthors(book, authors);
     book.setTitle(bookRequest.getTitle());
-    book.setPriority(priority);
-    bookRepository.save(book);
-    return mapper.mapToBookDto(book);
+    Book updatedBook = bookRepository.save(book);
+    return mapper.mapToBookDto(updatedBook);
   }
 
   @Override
@@ -92,14 +97,39 @@ public class BookServiceImpl implements BookService {
   }
 
   @Override
-  public List<BookDto> getAllBooks(int pageNo, int pageSize, String sortParam, String sortDir) {
+  public List<BookDto> getAllBooks(
+          int pageNo, int pageSize, String sortParam, String sortDir, Integer priorityValue) {
     Sort sort = Sort.by(sortParam);
     sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
             ? sort.ascending() : sort.descending();
     Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-    Page<Book> bookPage = bookRepository.findAll(pageable);
+    Page<Book> bookPage;
+    if (priorityValue != null) {
+      try {
+        Priority priority = Priority.fromValue(priorityValue);
+        bookPage = bookRepository.findByPriority(priority, pageable);
+      } catch (IllegalArgumentException ex) {
+        throw new HouseLibraryException(HttpStatus.BAD_REQUEST, "Invalid priority");
+      }
+    } else {
+       bookPage = bookRepository.findAll(pageable);
+    }
     List<Book> books = bookPage.getContent();
+
     return mapper.mapToBookDtoList(books);
+  }
+
+  @Override
+  public BookDto changeBookPriority(Long bookId, PriorityRequest priorityRequest) {
+    Book book = findBook(bookId);
+    try {
+      Priority priority = Priority.fromValue(priorityRequest.getPriority());
+      book.setPriority(priority);
+    } catch (IllegalArgumentException ex) {
+      throw new HouseLibraryException(HttpStatus.BAD_REQUEST, "Invalid priority");
+    }
+    Book updatedBook = bookRepository.save(book);
+    return mapper.mapToBookDto(updatedBook);
   }
 
   private List<Author> getAuthorsFromRequest(BookRequest bookRequest) {
@@ -139,6 +169,6 @@ public class BookServiceImpl implements BookService {
   private Book findBook(Long bookId) {
     return bookRepository.findById(bookId)
             .orElseThrow(() -> new HouseLibraryException(
-                    HttpStatus.NOT_FOUND, "Book with given ID does not exis t"));
+                    HttpStatus.NOT_FOUND, "Book with given ID does not exist"));
   }
 }

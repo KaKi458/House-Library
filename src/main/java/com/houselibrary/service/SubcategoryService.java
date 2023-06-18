@@ -19,7 +19,6 @@ public interface SubcategoryService {
 
   List<SubcategoryDto> getAllSubcategories();
 
-  List<BookDto> getSubcategoryBooks(@NotNull Long subcategoryId);
-
-  List<BookDto> getSubcategoryBooksByPriority(@NotNull Long subcategoryId, @NotNull int priority);
+  List<BookDto> getSubcategoryBooks(
+          @NotNull Long subcategoryId, int pageNo, int pageSize, String sortParam, String sortDir, Integer priority);
 }

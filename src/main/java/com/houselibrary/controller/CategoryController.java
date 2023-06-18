@@ -51,8 +51,16 @@ public class CategoryController {
   }
 
   @GetMapping("/{categoryId}/books")
-  public ResponseEntity<List<BookDto>> getCategoryBooks(@PathVariable Long categoryId) {
-    List<BookDto> booksDto = categoryService.getCategoryBooks(categoryId);
+  public ResponseEntity<List<BookDto>> getCategoryBooks(
+          @PathVariable Long categoryId,
+          @RequestParam(required = false, defaultValue = "0") int pageNo,
+          @RequestParam(required = false, defaultValue = "50") int pageSize,
+          @RequestParam(required = false, defaultValue = "title") String sortParam,
+          @RequestParam(required = false, defaultValue = "asc") String sortDir,
+          @RequestParam(required = false) Integer priority
+  ) {
+    List<BookDto> booksDto = categoryService.getCategoryBooks(
+            categoryId, pageNo, pageSize, sortParam, sortDir, priority);
     return ResponseEntity.ok(booksDto);
   }
 

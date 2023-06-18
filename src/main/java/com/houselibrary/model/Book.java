@@ -24,12 +24,11 @@ public class Book {
   private List<Author> authors;
 
   @ManyToOne
+  private Category category;
+
+  @ManyToOne
   private Subcategory subcategory;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated
   private Priority priority;
-
-  public Category getCategory() {
-    return subcategory != null ? subcategory.getCategory() : null;
-  }
 }

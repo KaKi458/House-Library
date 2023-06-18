@@ -1,6 +1,7 @@
 package com.houselibrary.service;
 
 import com.houselibrary.dto.request.BookRequest;
+import com.houselibrary.dto.request.PriorityRequest;
 import com.houselibrary.dto.response.BookDto;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,5 +19,7 @@ public interface BookService {
 
   List<BookDto> getBooksByTitle(@NotNull String bookName);
 
-  List<BookDto> getAllBooks(int pageNo, int pageSize, String sortParam, String sortDir);
+  List<BookDto> getAllBooks(int pageNo, int pageSize, String sortParam, String sortDir, Integer priority);
+
+  BookDto changeBookPriority(Long bookId, PriorityRequest priorityRequest);
 }

@@ -51,16 +51,17 @@ public class SubcategoryController {
     return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/{subcategoryId}/books")
-  public ResponseEntity<List<BookDto>> getSubcategoryBooks(@PathVariable Long subcategoryId) {
-    List<BookDto> booksDto = subcategoryService.getSubcategoryBooks(subcategoryId);
-    return ResponseEntity.ok(booksDto);
-  }
-
-  @GetMapping("/{subcategoryId}/books/{priority}")
-  public ResponseEntity<List<BookDto>> getSubcategoryBooksByPriority(
-      @PathVariable Long subcategoryId, @PathVariable int priority) {
-    List<BookDto> booksDto = subcategoryService.getSubcategoryBooksByPriority(subcategoryId, priority);
+    @GetMapping("/{subcategoryId}/books")
+  public ResponseEntity<List<BookDto>> getSubcategoryBooks(
+          @PathVariable Long subcategoryId,
+          @RequestParam(required = false, defaultValue = "0") int pageNo,
+          @RequestParam(required = false, defaultValue = "50") int pageSize,
+          @RequestParam(required = false, defaultValue = "title") String sortParam,
+          @RequestParam(required = false, defaultValue = "asc") String sortDir,
+          @RequestParam(required = false) Integer priority
+    ) {
+    List<BookDto> booksDto = subcategoryService.getSubcategoryBooks(
+            subcategoryId, pageNo, pageSize, sortParam, sortDir, priority);
     return ResponseEntity.ok(booksDto);
   }
 }

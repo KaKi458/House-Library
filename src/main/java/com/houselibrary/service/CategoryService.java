@@ -20,7 +20,9 @@ public interface CategoryService {
 
   List<CategoryDto> getAllCategories();
 
-  List<BookDto> getCategoryBooks(@NotNull Long categoryId);
+  List<BookDto> getCategoryBooks(
+          @NotNull Long categoryId, int pageNo, int pageSize, String sortParam, String sortDir, Integer priority);
 
   List<SubcategoryDto> getCategorySubcategories(@NotNull Long categoryId);
+
 }
