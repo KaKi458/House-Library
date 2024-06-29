@@ -1,7 +1,7 @@
-FROM eclipse-temurin:19
+FROM openjdk:21-slim
 
 WORKDIR /app
 
-COPY target/House-Library-0.1.0.jar /app/app.jar
+COPY target/house-library-0.2.0.jar /app/house-library.jar
 
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+ENTRYPOINT [ "java", "-jar", "house-library.jar" ]
