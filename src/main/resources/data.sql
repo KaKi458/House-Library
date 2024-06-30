@@ -1,5 +1,8 @@
 USE house_library;
 
+SET NAMES 'utf8mb4';
+SET collation_connection = 'utf8mb4_unicode_ci';
+
 INSERT INTO `category`
 VALUES
     (1, 'Matematyka'),
