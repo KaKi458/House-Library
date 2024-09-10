@@ -1,24 +1,49 @@
 package com.houselibrary.service;
 
-import com.houselibrary.dto.request.SubcategoryRequest;
-import com.houselibrary.dto.response.BookDto;
-import com.houselibrary.dto.response.SubcategoryDto;
-import jakarta.validation.constraints.NotNull;
+import com.houselibrary.api.response.SubcategoryResponse;
+import com.houselibrary.exception.HouseLibraryException;
+import com.houselibrary.model.Book;
+import com.houselibrary.model.Subcategory;
+import com.houselibrary.repository.SubcategoryRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+@Service
+@RequiredArgsConstructor
+@Setter
+public class SubcategoryService {
 
-public interface SubcategoryService {
+  private final SubcategoryRepository subcategoryRepository;
 
-  SubcategoryDto addSubcategory(@NotNull SubcategoryRequest subcategoryRequest);
+  public SubcategoryResponse getSubcategory(Integer subcategoryId) {
+    Subcategory subcategory = findSubcategory(subcategoryId);
+    return new SubcategoryResponse(subcategory);
+  }
 
-  SubcategoryDto getSubcategory(@NotNull Long subcategoryId);
+  public SubcategoryResponse updateSubcategoryName(Integer subcategoryId, String newSubcategoryName) {
+    Subcategory subcategory = findSubcategory(subcategoryId);
+    subcategory.setName(newSubcategoryName);
+    subcategory = subcategoryRepository.save(subcategory);
+    return new SubcategoryResponse(subcategory);
+  }
 
-  SubcategoryDto updateSubcategory(@NotNull Long subcategoryId, SubcategoryRequest subcategoryRequest);
+  public void deleteSubcategory(Integer subcategoryId) {
+    Subcategory subcategory = findSubcategory(subcategoryId);
+    removeAllBooksFromSubcategory(subcategory);
+    subcategoryRepository.delete(subcategory);
+  }
 
-  void deleteSubcategory(@NotNull Long subcategoryId);
+  private void removeAllBooksFromSubcategory(Subcategory subcategory) {
+    for (Book book : subcategory.getBooks()) {
+      book.setSubcategory(null);
+    }
+  }
 
-  List<SubcategoryDto> getAllSubcategories();
-
-  List<BookDto> getSubcategoryBooks(
-          @NotNull Long subcategoryId, int pageNo, int pageSize, String sortParam, String sortDir, Integer priority);
+  private Subcategory findSubcategory(Integer subcategoryId) {
+    return subcategoryRepository.findById(subcategoryId)
+            .orElseThrow(() -> new HouseLibraryException(
+                    HttpStatus.NOT_FOUND, "Subcategory with given ID does not exist"));
+  }
 }

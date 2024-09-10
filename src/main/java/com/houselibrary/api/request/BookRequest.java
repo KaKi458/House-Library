@@ -1,14 +1,17 @@
-package com.houselibrary.dto.request;
+package com.houselibrary.api.request;
 
 import lombok.Getter;
-
 import java.util.List;
 
 @Getter
 public class BookRequest {
 
   private String title;
-  private Long subcategoryId;
-  private List<Long> authors;
+  private String category;
+  private String subcategory;
+  private List<AuthorRequest> authors;
   private Integer priority;
+
+
+
 }

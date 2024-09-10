@@ -3,20 +3,23 @@ version: "3.8"
 services:
   mysql:
     container_name: mysql
-    image: mysql
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: house_library
-      MYSQL_CHARSET: utf8
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     networks:
-      house-library-net:
-    restart: always
+      net:
+    restart: on-failure
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: [ "CMD", "mysqladmin", "ping", "--silent" ]
       interval: 10s
       timeout: 5s
       retries: 3
+      start_period: 30s
     volumes:
+      - mysql-data:/var/lib/mysql
       - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
       - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/2_data.sql
 
@@ -31,8 +34,11 @@ services:
     environment:
       MYSQL_HOST: mysql
     networks:
-      house-library-net:
+      net:
     restart: on-failure
-  
+
+volumes:
+  mysql-data:
+
 networks:
-  house-library-net:
+  net:
