@@ -1,28 +1,59 @@
 package com.houselibrary.service;
 
-import com.houselibrary.dto.request.CategoryRequest;
-import com.houselibrary.dto.response.BookDto;
-import com.houselibrary.dto.response.CategoryDto;
-import com.houselibrary.dto.response.SubcategoryDto;
-import jakarta.validation.constraints.NotNull;
+import com.houselibrary.api.response.CategoryResponse;
+import com.houselibrary.api.response.CategoryResponseWithoutBooks;
+import com.houselibrary.exception.HouseLibraryException;
+import com.houselibrary.model.Book;
+import com.houselibrary.model.Category;
+import com.houselibrary.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public interface CategoryService {
+@Service
+@RequiredArgsConstructor
+public class CategoryService {
 
-  CategoryDto addCategory(@NotNull CategoryRequest categoryRequest);
+  private final CategoryRepository categoryRepository;
 
-  CategoryDto getCategory(@NotNull Long categoryId);
+  public CategoryResponse getCategory(Integer categoryId) {
+    Category category = findCategory(categoryId);
+    return new CategoryResponse(category);
+  }
 
-  CategoryDto updateCategory(@NotNull Long categoryId, CategoryRequest categoryRequest);
+  public List<CategoryResponseWithoutBooks> getAllCategories() {
+    List<Category> categories = categoryRepository.findAll();
+    List<CategoryResponseWithoutBooks> responses = new ArrayList<>();
+    categories.forEach(category -> responses.add(new CategoryResponseWithoutBooks(category)));
+    return responses;
+  }
 
-  void deleteCategory(@NotNull Long categoryId);
+  public CategoryResponse updateCategoryName(Integer categoryId, String newCategoryName) {
+    Category category = findCategory(categoryId);
+    category.setName(newCategoryName);
+    category = categoryRepository.save(category);
+    return new CategoryResponse(category);
+  }
 
-  List<CategoryDto> getAllCategories();
+  public void deleteCategory(Integer categoryId) {
+    Category category = findCategory(categoryId);
+    removeAllBooksFromCategory(category);
+    categoryRepository.delete(category);
+  }
 
-  List<BookDto> getCategoryBooks(
-          @NotNull Long categoryId, int pageNo, int pageSize, String sortParam, String sortDir, Integer priority);
+  private void removeAllBooksFromCategory(Category category) {
+    for (Book book : category.getBooks()) {
+      book.setCategory(null);
+      book.setSubcategory(null);
+    }
+  }
 
-  List<SubcategoryDto> getCategorySubcategories(@NotNull Long categoryId);
-
+  private Category findCategory(Integer categoryId) {
+    return categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new HouseLibraryException(
+                    HttpStatus.NOT_FOUND, "Category with given ID does not exist"));
+  }
 }

@@ -16,7 +16,7 @@ public class Category {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @Column(nullable = false)
   private String name;
@@ -34,5 +34,9 @@ public class Category {
       books.addAll(subcategory.getBooks());
     }
     return books;
+  }
+
+  public void addSubcategory(Subcategory subcategory) {
+    subcategories.add(subcategory);
   }
 }

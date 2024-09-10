@@ -1,26 +1,51 @@
 package com.houselibrary.service;
 
-import com.houselibrary.dto.request.AuthorRequest;
-import com.houselibrary.dto.response.AuthorDto;
-import com.houselibrary.dto.response.BookDto;
-import jakarta.validation.constraints.NotNull;
+import com.houselibrary.api.response.AuthorResponse;
+import com.houselibrary.exception.HouseLibraryException;
+import com.houselibrary.model.Author;
+import com.houselibrary.repository.AuthorRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
+public class AuthorService {
 
-public interface AuthorService {
+  private final AuthorRepository authorRepository;
 
-  AuthorDto addAuthor(@NotNull AuthorRequest authorRequest);
+  public AuthorResponse getAuthor(Integer authorId) {
+    Author author = findAuthor(authorId);
+    return new AuthorResponse(author);
+  }
 
-  AuthorDto getAuthor(@NotNull Long authorId);
+  public List<AuthorResponse> getAllAuthors(int pageNo, int pageSize, String sortParam, String sortDir) {
+    Sort sort = Sort.by(sortParam);
+    sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+            ? sort.ascending() : sort.descending();
+    Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    Page<Author> page = authorRepository.findAll(pageable);
+    List<Author> authors = page.getContent();
+    List<AuthorResponse> responses = new ArrayList<>();
+    authors.forEach(a -> responses.add(new AuthorResponse(a)));
+    return responses;
+  }
 
-  AuthorDto updateAuthor(@NotNull Long authorId, AuthorRequest authorRequest);
+  public void deleteAuthor(Integer authorId) {
+    Author author = findAuthor(authorId);
+    authorRepository.delete(author);
+  }
 
-  void deleteAuthor(@NotNull Long authorId);
-
-  List<AuthorDto> getAuthorsByName(@NotNull String authorName);
-
-  List<AuthorDto> getAllAuthors(int pageNo, int pageSize, String sortParam, String sortDir);
-
-  List<BookDto> getAuthorBooks(@NotNull Long authorId);
+  private Author findAuthor(Integer authorId) {
+    return authorRepository.findById(authorId).orElseThrow(
+            () -> new HouseLibraryException(
+                    HttpStatus.NOT_FOUND, "Author with given ID does not exist"));
+  }
 }
