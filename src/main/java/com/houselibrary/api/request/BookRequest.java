@@ -11,7 +11,4 @@ public class BookRequest {
   private String subcategory;
   private List<AuthorRequest> authors;
   private Integer priority;
-
-
-
 }

@@ -25,10 +25,4 @@ public class SubcategoryController {
     SubcategoryResponse subcategoryResponse = subcategoryService.updateSubcategoryName(subcategoryId, newSubcategoryName);
     return ResponseEntity.ok().body(subcategoryResponse);
   }
-
-  @DeleteMapping("/{subcategoryId}")
-  public ResponseEntity<Void> deleteSubcategory(@PathVariable Integer subcategoryId) {
-    subcategoryService.deleteSubcategory(subcategoryId);
-    return ResponseEntity.noContent().build();
-  }
 }

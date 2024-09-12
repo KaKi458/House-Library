@@ -1,6 +1,8 @@
 package com.houselibrary.api.response;
 
 import com.houselibrary.model.Book;
+import com.houselibrary.model.Category;
+import com.houselibrary.model.Subcategory;
 import lombok.Getter;
 
 import java.util.List;
@@ -20,10 +22,12 @@ public class BookResponse {
   public BookResponse(Book book) {
     bookId = book.getId();
     title = book.getTitle();
-    categoryId = book.getCategory().getId();
-    categoryName = book.getCategory().getName();
-    subcategoryId = book.getSubcategory().getId();
-    subcategoryName = book.getSubcategory().getName();
+    Category category = book.getCategory();
+    categoryId = category != null ? category.getId() : null;
+    categoryName = category != null ? category.getName() : null;
+    Subcategory subcategory = book.getSubcategory();
+    subcategoryId = subcategory != null ? subcategory.getId() : null;
+    subcategoryName = subcategory != null ? subcategory.getName() : null;
     authors = AuthorRecord.getAuthors(book.getAuthors());
     priority = book.getPriority().getValue();
   }

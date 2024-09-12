@@ -38,19 +38,6 @@ public class CategoryService {
     return new CategoryResponse(category);
   }
 
-  public void deleteCategory(Integer categoryId) {
-    Category category = findCategory(categoryId);
-    removeAllBooksFromCategory(category);
-    categoryRepository.delete(category);
-  }
-
-  private void removeAllBooksFromCategory(Category category) {
-    for (Book book : category.getBooks()) {
-      book.setCategory(null);
-      book.setSubcategory(null);
-    }
-  }
-
   private Category findCategory(Integer categoryId) {
     return categoryRepository.findById(categoryId)
             .orElseThrow(() -> new HouseLibraryException(

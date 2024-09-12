@@ -38,11 +38,6 @@ public class AuthorService {
     return responses;
   }
 
-  public void deleteAuthor(Integer authorId) {
-    Author author = findAuthor(authorId);
-    authorRepository.delete(author);
-  }
-
   private Author findAuthor(Integer authorId) {
     return authorRepository.findById(authorId).orElseThrow(
             () -> new HouseLibraryException(

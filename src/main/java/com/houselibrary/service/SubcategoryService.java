@@ -29,18 +29,6 @@ public class SubcategoryService {
     return new SubcategoryResponse(subcategory);
   }
 
-  public void deleteSubcategory(Integer subcategoryId) {
-    Subcategory subcategory = findSubcategory(subcategoryId);
-    removeAllBooksFromSubcategory(subcategory);
-    subcategoryRepository.delete(subcategory);
-  }
-
-  private void removeAllBooksFromSubcategory(Subcategory subcategory) {
-    for (Book book : subcategory.getBooks()) {
-      book.setSubcategory(null);
-    }
-  }
-
   private Subcategory findSubcategory(Integer subcategoryId) {
     return subcategoryRepository.findById(subcategoryId)
             .orElseThrow(() -> new HouseLibraryException(

@@ -79,6 +79,8 @@ public class BookService {
   public void deleteBook(Integer bookId) {
     Book book = findBook(bookId);
     unlinkAuthorsFromBook(book);
+    removeSubcategoryIfEmpty(book.getSubcategory());
+    removeCategoryIfEmpty(book.getCategory());
     bookRepository.delete(book);
   }
 
@@ -107,7 +109,6 @@ public class BookService {
     Subcategory subcategory = subcategoryRepository.findByName(bookRequest.getSubcategory()).orElse(null);
     if (subcategory == null) {
       subcategory = new Subcategory(bookRequest.getSubcategory(), category);
-//      category.addSubcategory(subcategory);
       subcategoryRepository.save(subcategory);
     } else {
       if (subcategory.getCategory() != category) {
@@ -151,6 +152,21 @@ public class BookService {
   private void unlinkAuthorsFromBook(Book book) {
     for (Author author : book.getAuthors()) {
       author.removeBook(book);
+      if (author.getBooks().isEmpty()) {
+        authorRepository.delete(author);
+      }
+    }
+  }
+
+  private void removeSubcategoryIfEmpty(Subcategory subcategory) {
+    if (subcategory.getBooks().isEmpty()) {
+      subcategoryRepository.delete(subcategory);
+    }
+  }
+
+  private void removeCategoryIfEmpty(Category category) {
+    if (category.getBooks().isEmpty()) {
+      categoryRepository.delete(category);
     }
   }
 
