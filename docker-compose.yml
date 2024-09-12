@@ -4,6 +4,8 @@ services:
   mysql:
     container_name: mysql
     image: mysql:8.0
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: house_library
@@ -20,8 +22,8 @@ services:
       start_period: 30s
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
-      - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/2_data.sql
+      - ./src/main/resources/schema.sql:/sql/schema.sql
+      - ./src/main/resources/data.sql:/sql/data.sql
 
   app:
     image: house-library
