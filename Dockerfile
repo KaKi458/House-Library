@@ -2,6 +2,6 @@ FROM openjdk:21-slim
 
 WORKDIR /app
 
-COPY target/house-library-0.2.0.jar /app/house-library.jar
+COPY target/home-library-0.2.0.jar /app/home-library.jar
 
-ENTRYPOINT [ "java", "-jar", "house-library.jar" ]
+ENTRYPOINT [ "java", "-jar", "home-library.jar" ]

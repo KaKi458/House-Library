@@ -8,7 +8,7 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: house_library
+      MYSQL_DATABASE: home_library
       MYSQL_CHARACTER_SET_SERVER: utf8mb4
       MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     networks:
@@ -26,7 +26,7 @@ services:
       - ./src/main/resources/data.sql:/sql/data.sql
 
   app:
-    image: house-library
+    image: home-library
     build: .
     ports:
       - "8080:8080"

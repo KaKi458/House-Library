@@ -11,10 +11,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.house-library</groupId>
-    <artifactId>house-library</artifactId>
+    <groupId>com.homelibrary</groupId>
+    <artifactId>home-library</artifactId>
     <version>0.2.0</version>
-    <name>House-Library</name>
+    <name>home-library</name>
 
     <properties>
         <java.version>21</java.version>

@@ -1,4 +1,4 @@
-USE house_library;
+USE home_library;
 
 SET NAMES 'utf8mb4';
 SET collation_connection = 'utf8mb4_unicode_ci';
@@ -489,4 +489,3 @@ VALUES
     (8, 9),
     (8, 7),
     (8, 119);
-

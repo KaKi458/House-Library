@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `house_library`;
-USE `house_library`;
+CREATE DATABASE IF NOT EXISTS `home_library`;
+USE `home_library`;
 
 DROP TABLE IF EXISTS `author_book`;
 DROP TABLE IF EXISTS `book`;
